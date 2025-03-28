@@ -1,0 +1,4 @@
+[22-Dec-2023 23:45:00 America/Toronto] PHP Fatal error:  Uncaught Error: Class "Illuminate\Support\Facades\Route" not found in /home/estuaireachats/public_html/routes/api.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/routes/api.php on line 8

@@ -1,0 +1,165 @@
+{
+	"info": {
+		"_postman_id": "c00cbd20-52fa-456c-aff1-1c2cd0ce4d94",
+		"name": "account",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28538067",
+		"_collection_link": "https://restless-spaceship-733954.postman.co/workspace/My-Workspace~cd484918-7084-4fc3-811b-31fef480fc96/collection/28538067-c00cbd20-52fa-456c-aff1-1c2cd0ce4d94?action=share&source=collection_link&creator=28538067"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Create Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBjdXN0b20uY29tIiwiaWF0IjoxNjI5MDI4Njk5LCJleHAiOjE2MjkxMTUwOTl9.BDp3s2xGWDcWwXi0ef_E_WL7316uWKqour1t5zDW4ssX3lK9CgLTor8sWDKaQjD9Iy_dGyOXZA-Wk33Kr020Uw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accountId",
+								"value": "te95js3n8e96qmpab4pc2laz3cl3ukcx",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\" : \"salomon\",\n    \"password\" : \"000000\",\n    \"name\": \"Salomon\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sandbox.api.afrikpay.com/account/create",
+							"protocol": "https",
+							"host": [
+								"sandbox",
+								"api",
+								"afrikpay",
+								"com"
+							],
+							"path": [
+								"account",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate keys",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let accountId = \"ht4lmhif20gh63n6dkuxvmy79mo8ahwy\";",
+									"let secret = \"3c9999b6cdc7f1cec933cc1714595223\";",
+									"let hash = CryptoJS.HmacSHA256(accountId, secret);",
+									"hash = hash.toString(CryptoJS.enc.Hex);",
+									"",
+									"pm.variables.set('hash', hash);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MDMyNjY2MzMsImV4cCI6MTcwMzI3MDIzMywicm9sZXMiOiJST0xFX0RFViIsInVzZXJuYW1lIjoic3R5bGUxIn0.c5GMgCyMAYuVI6a0Ysmp_GoGA2Yy8yGdgLOZjtBdeqV2QIeHtdiaVMR7m9kSsUaiBeWul_pBL4ZmStbVCw_arC_HaC1DXUWuCDdo63pwnYSIjQSQMJuFolx0akAed5XRj65KPUpycgf7m6voC_B8ydZHwTcPXvxIU2XovYV0cBr7bIQgTsiZfUsMKF8TLCTz09sPPeht2H-dJZmyXot4SMPPn9XRdRZVtHKHa3-mfKvZ2FMt7QEw9R6BCXspiH9t8cnJ7RojsuDv_PIc4MsD_DeQznHp9GiK7eC411C72G01abvlIklQOCcqAQso0004ewa_dyo_AuzHAsF7Jdvbew",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accountId",
+								"value": "ht4lmhif20gh63n6dkuxvmy79mo8ahwy",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"hash\": \"{{hash}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sandbox.api.afrikpay.com/account/generate/keys",
+							"protocol": "https",
+							"host": [
+								"sandbox",
+								"api",
+								"afrikpay",
+								"com"
+							],
+							"path": [
+								"account",
+								"generate",
+								"keys"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accountId",
+								"value": "ht4lmhif20gh63n6dkuxvmy79mo8ahwy",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"username\":\"style1\",\n   \"password\":\"000000\"\n}\n\n //\"key\": \"3c9999b6cdc7f1cec933cc1714595223\",\n  //      \"iv\": \"3ab2da8d1c07b6e4e1770f2c81652e9f\",\n//        \"accountId\": \"ht4lmhif20gh63n6dkuxvmy79mo8ahwy\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sandbox.api.afrikpay.com/account/generate/token",
+							"protocol": "https",
+							"host": [
+								"sandbox",
+								"api",
+								"afrikpay",
+								"com"
+							],
+							"path": [
+								"account",
+								"generate",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

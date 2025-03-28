@@ -1,0 +1,499 @@
+{
+	"info": {
+		"_postman_id": "3eb0ceda-73f9-4fc7-9c45-f0a20cde9998",
+		"name": "KAPFOU Api Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28538067",
+		"_collection_link": "https://restless-spaceship-733954.postman.co/workspace/My-Workspace~cd484918-7084-4fc3-811b-31fef480fc96/collection/28538067-3eb0ceda-73f9-4fc7-9c45-f0a20cde9998?action=share&source=collection_link&creator=28538067"
+	},
+	"item": [
+		{
+			"name": "Ecommerce",
+			"item": [
+				{
+					"name": "Collect",
+					"item": [
+						{
+							"name": "Ecommerce Collect v2 hash",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let provider = \"mtn_mobilemoney_cm\";",
+											"let reference = \"671111111\";",
+											"let amount = 300;",
+											"let secret = \"d751a87c6a3c33f315461414640e47cb\";",
+											"let purchaseref = new Date().getTime().toString();",
+											"let store = \"AFC9160\";",
+											"let code = CryptoJS.MD5(\"0000\").toString();",
+											"let hash = CryptoJS.HmacSHA256(store + provider + reference + amount + purchaseref + code, secret).toString(CryptoJS.enc.Hex);",
+											"",
+											"pm.variables.set('hash', hash);",
+											"pm.variables.set('reference', reference);",
+											"pm.variables.set('provider', provider);",
+											"pm.variables.set('amount', amount);",
+											"pm.variables.set('store', store);",
+											"pm.variables.set('code', code);",
+											"pm.variables.set('purchaseref', purchaseref);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accountId",
+										"value": "xd38kl5898hw802tlutyfsdrx6s77zig",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"provider\": \"{{provider}}\",\n    \"reference\": \"{{reference}}\",\n    \"amount\": {{amount}},\n    \"purchaseref\": \"{{purchaseref}}\",\n    \"store\": \"{{store}}\",\n    \"hash\": \"{{hash}}\",\n    \"code\": \"{{code}}\",\n    \"description\": \"xxxx\",\n    \"notifurl\": \"https://webhook.site/6ce2d6e8-1667-4adc-a78d-e9d2684c3d6e\",\n    \"accepturl\": \"\",\n    \"cancelurl\": \"\",\n    \"declineurl\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://sandbox.api.afrikpay.com/api/ecommerce/collect/v2/",
+									"protocol": "https",
+									"host": [
+										"sandbox",
+										"api",
+										"afrikpay",
+										"com"
+									],
+									"path": [
+										"api",
+										"ecommerce",
+										"collect",
+										"v2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ecommerce Collect v2 hash Visa",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let provider = \"visa\";//mode de paiement",
+											"let reference = \"t.njipmo@it.afrikpay.com\"; //email du payeur adress ",
+											"let amount = 300;",
+											"let secret = \"d751a87c6a3c33f315461414640e47cb\";",
+											"let purchaseref = new Date().getTime().toString();",
+											"let store = \"AFC9160\";",
+											"let code = CryptoJS.MD5(\"0000\").toString();",
+											"let hash = CryptoJS.HmacSHA256(store + provider + reference + amount + purchaseref + code, secret).toString(CryptoJS.enc.Hex);",
+											"",
+											"pm.variables.set('hash', hash);",
+											"pm.variables.set('reference', reference);",
+											"pm.variables.set('provider', provider);",
+											"pm.variables.set('amount', amount);",
+											"pm.variables.set('store', store);",
+											"pm.variables.set('code', code);",
+											"pm.variables.set('purchaseref', purchaseref);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accountId",
+										"value": "xd38kl5898hw802tlutyfsdrx6s77zig",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"provider\": \"{{provider}}\",\n    \"reference\": \"{{reference}}\",\n    \"amount\": {{amount}},\n    \"purchaseref\": \"{{purchaseref}}\",\n    \"store\": \"{{store}}\",\n    \"hash\": \"{{hash}}\",\n    \"code\": \"{{code}}\",\n    \"description\": \"xxxx\",\n    \"notifurl\": \"https://webhook.site/fdca9e93-6a1e-46f9-8f30-1fe599a6122a\",\n    \"accepturl\": \"\",\n    \"cancelurl\": \"\",\n    \"declineurl\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://sandbox.api.afrikpay.com/api/ecommerce/collect/v2/",
+									"protocol": "https",
+									"host": [
+										"sandbox",
+										"api",
+										"afrikpay",
+										"com"
+									],
+									"path": [
+										"api",
+										"ecommerce",
+										"collect",
+										"v2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ecommerce Collect v2 hash Mastercard",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//*mode de paiement frikpay mtn_mobilemoney_cm,orange_money_cm, express_union_mobilemoney, paypal ",
+											"let provider = \"master_card\"; ",
+											"//* email du payeur*/",
+											"let reference = \"t.njipmo@it.afrikpay.com\";",
+											"//* montant de la transaction*/",
+											"let amount = 300; ",
+											"//* clef de chiffrement */",
+											"let secret = \"d751a87c6a3c33f315461414640e47cb\"; ",
+											"//* référence du paiement numéro unique */",
+											"let purchaseref = new Date().getTime().toString();",
+											"//* code du marchand  */",
+											"let store = \"AFC9160\"; ",
+											"//* mot de passe du marchand  */ ",
+											"let code = CryptoJS.MD5(\"0000\").toString(); ",
+											"//*  Construction du hash */",
+											"let hash = CryptoJS.HmacSHA256(store + provider + reference + amount + purchaseref + code, secret).toString(CryptoJS.enc.Hex); ",
+											"",
+											"pm.variables.set('hash', hash);",
+											"pm.variables.set('reference', reference);",
+											"pm.variables.set('provider', provider);",
+											"pm.variables.set('amount', amount);",
+											"pm.variables.set('store', store);",
+											"pm.variables.set('code', code);",
+											"pm.variables.set('purchaseref', purchaseref);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accountId",
+										"value": "xd38kl5898hw802tlutyfsdrx6s77zig",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"provider\": \"{{provider}}\",\n    \"reference\": \"{{reference}}\",\n    \"amount\": {{amount}},\n    \"purchaseref\": \"{{purchaseref}}\",\n    \"store\": \"{{store}}\",\n    \"hash\": \"{{hash}}\",\n    \"code\": \"{{code}}\",\n    \"description\": \"xxxx\",\n    \"notifurl\": \"https://webhook.site/fdca9e93-6a1e-46f9-8f30-1fe599a6122a\",\n    \"accepturl\": \"\",\n    \"cancelurl\": \"\",\n    \"declineurl\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://sandbox.api.afrikpay.com/api/ecommerce/collect/v2/",
+									"protocol": "https",
+									"host": [
+										"sandbox",
+										"api",
+										"afrikpay",
+										"com"
+									],
+									"path": [
+										"api",
+										"ecommerce",
+										"collect",
+										"v2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ecommerce Collect v2 hash Paypal",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let provider = \"paypal\";",
+											"let reference = \"t.njipmo@it.afrikpay.com\";",
+											"let amount = 300;",
+											"let secret = \"d751a87c6a3c33f315461414640e47cb\";",
+											"let purchaseref = new Date().getTime().toString();",
+											"let store = \"AFC9160\";",
+											"let code = CryptoJS.MD5(\"0000\").toString();",
+											"let hash = CryptoJS.HmacSHA256(store + provider + reference + amount + purchaseref + code, secret).toString(CryptoJS.enc.Hex);",
+											"",
+											"pm.variables.set('hash', hash);",
+											"pm.variables.set('reference', reference);",
+											"pm.variables.set('provider', provider);",
+											"pm.variables.set('amount', amount);",
+											"pm.variables.set('store', store);",
+											"pm.variables.set('code', code);",
+											"pm.variables.set('purchaseref', purchaseref);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accountId",
+										"value": "xd38kl5898hw802tlutyfsdrx6s77zig",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"provider\": \"{{provider}}\",\n    \"reference\": \"{{reference}}\",\n    \"amount\": {{amount}},\n    \"purchaseref\": \"{{purchaseref}}\",\n    \"store\": \"{{store}}\",\n    \"hash\": \"{{hash}}\",\n    \"code\": \"{{code}}\",\n    \"description\": \"xxxx\",\n    \"notifurl\": \"https://webhook.site/fdca9e93-6a1e-46f9-8f30-1fe599a6122a\",\n    \"accepturl\": \"\",\n    \"cancelurl\": \"\",\n    \"declineurl\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://sandbox.api.afrikpay.com/api/ecommerce/collect/v2/",
+									"protocol": "https",
+									"host": [
+										"sandbox",
+										"api",
+										"afrikpay",
+										"com"
+									],
+									"path": [
+										"api",
+										"ecommerce",
+										"collect",
+										"v2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ecommerce Collect v2 hash express union",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let provider = \"express_union_mobilemoney\";",
+											"let reference = \"t.njipmo@it.afrikpay.com\";",
+											"let amount = 300;",
+											"let secret = \"5115c5ce3a6855085b402d0d61b7e7fb\";",
+											"let purchaseref = new Date().getTime().toString();",
+											"let store = \"AFC9160\";",
+											"let code = CryptoJS.MD5(\"0000\").toString();",
+											"let hash = CryptoJS.HmacSHA256(store + provider + reference + amount + purchaseref + code, secret).toString(CryptoJS.enc.Hex);",
+											"",
+											"pm.variables.set('hash', hash);",
+											"pm.variables.set('reference', reference);",
+											"pm.variables.set('provider', provider);",
+											"pm.variables.set('amount', amount);",
+											"pm.variables.set('store', store);",
+											"pm.variables.set('code', code);",
+											"pm.variables.set('purchaseref', purchaseref);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accountId",
+										"value": "4659bbb3xx12lb4yw5yva7zuaao6h1uu",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"provider\": \"{{provider}}\",\n    \"reference\": \"{{reference}}\",\n    \"amount\": {{amount}},\n    \"purchaseref\": \"{{purchaseref}}\",\n    \"store\": \"{{store}}\",\n    \"hash\": \"{{hash}}\",\n    \"code\": \"{{code}}\",\n    \"description\": \"xxxx\",\n    \"notifurl\": \"https://webhook.site/fdca9e93-6a1e-46f9-8f30-1fe599a6122a\",\n    \"accepturl\": \"\",\n    \"cancelurl\": \"\",\n    \"declineurl\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://sandbox.api.afrikpay.com/api/ecommerce/collect/v2/",
+									"protocol": "https",
+									"host": [
+										"sandbox",
+										"api",
+										"afrikpay",
+										"com"
+									],
+									"path": [
+										"api",
+										"ecommerce",
+										"collect",
+										"v2",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Payout",
+					"item": [
+						{
+							"name": "Ecommerce Payout v2 hash",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let provider = \"mtn_mobilemoney_cm\";",
+											"let reference = \"651111111\";",
+											"let amount = 200;",
+											"let secret = \"d751a87c6a3c33f315461414640e47cb\";",
+											"let purchaseref = \"40002309235\";",
+											"let store = \"AFC9160\";",
+											"let password = CryptoJS.MD5(\"0000\").toString();",
+											"let hash = CryptoJS.HmacSHA256(store + provider + reference + amount + purchaseref + password, secret).toString(CryptoJS.enc.Hex);",
+											"",
+											"",
+											"pm.variables.set('hash', hash);",
+											"pm.variables.set('reference', reference);",
+											"pm.variables.set('provider', provider);",
+											"pm.variables.set('amount', amount);",
+											"pm.variables.set('store', store);",
+											"pm.variables.set('purchaseref', purchaseref);",
+											"pm.variables.set('password', password);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accountid",
+										"value": "xd38kl5898hw802tlutyfsdrx6s77zig",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"provider\": \"{{provider}}\",\n    \"reference\": \"{{reference}}\",\n    \"amount\": {{amount}},\n    \"purchaseref\": \"{{purchaseref}}\",\n    \"store\": \"{{store}}\",\n    \"hash\": \"{{hash}}\",\n    \"password\": \"{{password}}\",\n    \"description\": \"xxxx\",\n    \"notifurl\": \"https://webhook.site/9ca38784-40e2-4796-99e2-5f7097882fb8\",\n    \"accepturl\": \"\",\n    \"cancelurl\": \"\",\n    \"declineurl\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://sandbox.api.afrikpay.com/api/ecommerce/collect/v2/",
+									"protocol": "https",
+									"host": [
+										"sandbox",
+										"api",
+										"afrikpay",
+										"com"
+									],
+									"path": [
+										"api",
+										"ecommerce",
+										"collect",
+										"v2",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Status",
+					"item": [
+						{
+							"name": "Status",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let purchaseref = \"123456789994550\";\r",
+											"let secret = \"d751a87c6a3c33f315461414640e47cb\";\r",
+											"\r",
+											"let hash = CryptoJS.HmacSHA256(purchaseref, secret).toString(CryptoJS.enc.Hex);\r",
+											"\r",
+											"pm.variables.set('hash', hash);\r",
+											"pm.variables.set('purchaseref', purchaseref);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accountId",
+										"value": "xd38kl5898hw802tlutyfsdrx6s77zig",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"purchaseref\": \"{{purchaseref}}\",\r\n    \"store\": \"AFC9160\",\r\n    \"hash\": \"{{hash}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://34.86.5.170:8086/api/ecommerce/status/v2/",
+									"protocol": "http",
+									"host": [
+										"34",
+										"86",
+										"5",
+										"170"
+									],
+									"port": "8086",
+									"path": [
+										"api",
+										"ecommerce",
+										"status",
+										"v2",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

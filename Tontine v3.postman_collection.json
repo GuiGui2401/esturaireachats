@@ -1,0 +1,253 @@
+{
+	"info": {
+		"_postman_id": "d44dff59-e0a3-4409-9dc3-8b57259e522a",
+		"name": "Tontine v3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28538067",
+		"_collection_link": "https://restless-spaceship-733954.postman.co/workspace/My-Workspace~cd484918-7084-4fc3-811b-31fef480fc96/collection/28538067-d44dff59-e0a3-4409-9dc3-8b57259e522a?action=share&source=collection_link&creator=28538067"
+	},
+	"item": [
+		{
+			"name": "ecommerce",
+			"item": [
+				{
+					"name": "collect",
+					"item": [
+						{
+							"name": "Ecommerce Collect v3 Token hash",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let provider = \"mtn_mobilemoney_cm\";",
+											"let reference = \"651111111\";",
+											"let amount = 500;",
+											"let secret = \"9f2974b0e21245054bd994cfca9eb27c\";",
+											"let purchaseref = \"\";",
+											"let store = \"AFC9160\";",
+											"let code = \"\";",
+											"let hash = CryptoJS.HmacSHA256(store + provider + reference + amount + purchaseref + code, secret).toString(CryptoJS.enc.Hex);",
+											"//store+provider+reference+amount+purchaseref+code",
+											"",
+											"pm.globals.set('hash', hash);",
+											"pm.variables.set('reference', reference);",
+											"pm.variables.set('provider', provider);",
+											"pm.variables.set('amount', amount);",
+											"pm.variables.set('store', store);",
+											"pm.variables.set('code', code);",
+											"pm.variables.set('purchaseref', purchaseref);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MDE3MDMzMTMsImV4cCI6MTcwMTcwNjkxMywicm9sZXMiOiJST0xFX0RFViIsInVzZXJuYW1lIjoidGVzdCJ9.QKO6f06jdrnhIBiu2sETK48Tl13bs6hzgJE4MMVm2Sp9g8sD8PpnPwTAHqK5DyLGMUI7j6yu-ngvxp0-JJMn8OIsKc2rRufSlZkjYwRhNEjk_aO1f8vdWMBcDznRI9j3wOFkw1t_qLyffJ0XKMzAcOpKutCrFcdvNoCkB7qR9gSFgsB9lr27hiwu650m0wHpgdPWz09OX7PhGRNSIsRldbOP5Jr5CshZg6032nuBmYqBcZ0857ZwCTs1o0tNwxE7NKLASbctF7MI9SMj6pAk7UeKa4wZsVuC8zOenjR0Nr8pI9OOJW-qAOarG2pjZEjr9c4H2usriv2vOt5K52efcg",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "accountid",
+										"value": "np7w87ez5j6smwoprh4yhxah1alsfi2q",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"provider\": \"{{provider}}\",\n    \"reference\": \"{{reference}}\",\n    \"amount\": {{amount}},\n    \"purchaseref\": \"{{purchaseref}}\",\n    \"store\": \"{{store}}\",\n    \"hash\": \"{{hash}}\",\n    \"code\": \"{{code}}\",\n    \"description\": \"\",\n    \"notifurl\": \"https://webhook.site/6ce2d6e8-1667-4adc-a78d-e9d2684c3d6e\",\n    \"accepturl\": \"\",\n    \"cancelurl\": \"\",\n    \"declineurl\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://sandbox.api.afrikpay.com/api/ecommerce/collect/v3/",
+									"protocol": "https",
+									"host": [
+										"sandbox",
+										"api",
+										"afrikpay",
+										"com"
+									],
+									"path": [
+										"api",
+										"ecommerce",
+										"collect",
+										"v3",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "payout",
+					"item": [
+						{
+							"name": "Ecommerce Payout v3 Token hash",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let provider = \"mtn_mobilemoney_cm\";",
+											"let reference = \"651111111\";",
+											"let amount = 300;",
+											"let secret = \"9f2974b0e21245054bd994cfca9eb27c\";",
+											"let purchaseref = \"\";",
+											"let store = \"AFC9160\";",
+											"let password = \"6074c6aa3488f3c2dddff2a7ca821aab\";",
+											"let hash = CryptoJS.HmacSHA256(store + provider + reference + amount + purchaseref + password, secret).toString(CryptoJS.enc.Hex);",
+											"",
+											"pm.globals.set('hash', hash);",
+											"pm.variables.set('reference', reference);",
+											"pm.variables.set('provider', provider);",
+											"pm.variables.set('amount', amount);",
+											"pm.variables.set('store', store);",
+											"pm.variables.set('purchaseref', purchaseref);",
+											"pm.variables.set('password', password);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MDE3MDQ2MTUsImV4cCI6MTcwMTcwODIxNSwicm9sZXMiOiJST0xFX0RFViIsInVzZXJuYW1lIjoidGVzdCJ9.WoKsbOiXmxf3fpBsqhHpaEExhXlLaUhkeBcCfJmDnlI719J_nA8op91M0ho1gUesKUMMB-iUlMf03_lklNZQC3zEtftiA3DvrDXcbw6gubPK9SDyXAVUh8VStuPN7Rm0BoqaIA3QPo8KnSh1R9oi_ffZnI8eA9DNo-m25ZNY8j8VLUGud_jgsLIVroionmuRBtcxg76dhXgfdye1HloLjTR_hKX437-XNQR4o8nkEDDHevW2wQ2svJ5J4etHR95TE0bvY5c5hV5aPhzPgp-6sz0MhEgKUUhrcUOpyaHMWNCnOCj99HwSNMcn3QXvOP83WA9xuU5S-8Gij9W_3yZUbw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "accountid",
+										"value": "np7w87ez5j6smwoprh4yhxah1alsfi2q",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"provider\": \"{{provider}}\",\n    \"reference\": \"{{reference}}\",\n    \"amount\": {{amount}},\n    \"purchaseref\": \"{{purchaseref}}\",\n    \"store\": \"{{store}}\",\n    \"hash\": \"{{hash}}\",\n    \"password\": \"{{password}}\",\n    \"description\": \"\",\n    \"notifurl\": \"https://webhook.site/6ce2d6e8-1667-4adc-a78d-e9d2684c3d6e\",\n    \"accepturl\": \"\",\n    \"cancelurl\": \"\",\n    \"declineurl\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://sandbox.api.afrikpay.com/api/ecommerce/payout/v3/",
+									"protocol": "https",
+									"host": [
+										"sandbox",
+										"api",
+										"afrikpay",
+										"com"
+									],
+									"path": [
+										"api",
+										"ecommerce",
+										"payout",
+										"v3",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "status",
+					"item": [
+						{
+							"name": "Ecommerce Status v3 Token hash Copy",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let purchaseref = \"3_1701703506\";\r",
+											"let secret = \"9f2974b0e21245054bd994cfca9eb27c\";\r",
+											"\r",
+											"let hash = CryptoJS.HmacSHA256(purchaseref, secret).toString(CryptoJS.enc.Hex);\r",
+											"\r",
+											"pm.variables.set('hash', hash);\r",
+											"pm.variables.set('purchaseref', purchaseref);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MDE3MDUxMTEsImV4cCI6MTcwMTcwODcxMSwicm9sZXMiOiJST0xFX0RFViIsInVzZXJuYW1lIjoidGVzdCJ9.gvkTJEQadc0ctTbAQ11Msh2Sxz6Ve4uehMQP153nROuzCzJL43MctoyJa2y49Dq6iLiflL_rTRWYu3U3kSfm7FMMewABUuI6s8KL30nYfKEkL4wOFEgfvL6YWAFobnRFXIkkJR9VsFZ9JfPfJMlfwxjCKvoO8y83WPhMENcmW4g8S3NPmb6VX8jXFu32vbEQwhK_bQvFm-a6KiaaDMP5I5jVKwhg5lCL7DNigKj56GsYKdlbSlQ6k-6VhGSs0Bt8ELWilyoCIQEL8zUl6LgRpHnRc0o8qq3w0urlqOneJgX6CNpZnaTCL5dEwG7zhK9JgnMwpbjV3ASc0gPvxARvlQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "accountId",
+										"value": "np7w87ez5j6smwoprh4yhxah1alsfi2q",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"purchaseref\": \"{{purchaseref}}\",\r\n    \"store\": \"AFC9160\",\r\n    \"hash\": \"{{hash}}\"\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://34.86.5.170:8086/api/ecommerce/status/v3/",
+									"protocol": "http",
+									"host": [
+										"34",
+										"86",
+										"5",
+										"170"
+									],
+									"port": "8086",
+									"path": [
+										"api",
+										"ecommerce",
+										"status",
+										"v3",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

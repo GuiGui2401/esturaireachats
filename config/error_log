@@ -1,0 +1,208 @@
+[22-Dec-2023 09:08:23 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[29-Dec-2023 03:04:45 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[30-Dec-2023 00:27:37 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[02-Jan-2024 11:53:46 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[03-Jan-2024 15:09:53 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[03-Jan-2024 21:29:07 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[05-Jan-2024 00:15:42 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[05-Jan-2024 03:37:04 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[05-Jan-2024 10:40:55 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[07-Jan-2024 10:25:20 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[10-Jan-2024 07:30:17 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[10-Jan-2024 20:41:17 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[11-Jan-2024 02:27:22 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[12-Jan-2024 17:30:14 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[13-Jan-2024 04:45:07 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[13-Jan-2024 07:35:31 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[13-Jan-2024 15:30:44 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[16-Jan-2024 06:27:56 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[26-Jan-2024 19:02:52 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[26-Jan-2024 19:51:54 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[10-Feb-2024 08:50:41 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[10-Feb-2024 09:13:28 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/app.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/app.php on line 16
+[14-Feb-2024 21:12:08 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[14-Feb-2024 21:35:18 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/app.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/app.php on line 16
+[06-Mar-2024 15:19:31 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[07-Mar-2024 04:19:47 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[08-Mar-2024 03:39:41 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[08-Mar-2024 15:40:09 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[09-Mar-2024 07:22:48 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[10-Mar-2024 10:00:05 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[11-Mar-2024 11:48:25 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[12-Mar-2024 05:58:59 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[13-Mar-2024 08:09:57 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[14-Mar-2024 13:58:13 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[17-Mar-2024 11:27:16 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[18-Mar-2024 15:56:41 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[19-Mar-2024 11:05:46 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[19-Mar-2024 22:57:41 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[19-Mar-2024 23:21:48 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/app.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/app.php on line 16
+[22-Mar-2024 22:17:31 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[25-Mar-2024 10:30:44 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[25-Mar-2024 17:01:20 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[26-Mar-2024 16:13:47 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[01-Apr-2024 18:18:26 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[01-Apr-2024 18:56:38 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[03-Apr-2024 08:35:50 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[03-Apr-2024 20:43:26 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[04-Apr-2024 09:46:40 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[05-Apr-2024 16:43:00 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[06-Apr-2024 09:37:25 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[07-Apr-2024 09:58:20 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
+[09-Apr-2024 10:27:52 America/Toronto] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/estuaireachats/public_html/config/cache.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/estuaireachats/public_html/config/cache.php on line 20
