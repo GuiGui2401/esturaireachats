@@ -1,3 +1,8 @@
+## Activer la compression Gzip
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
@@ -18,6 +23,17 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+</IfModule>
+
+## Activer le Keep-Alive pour des connexions plus rapides ##
+<IfModule mod_headers.c>
+    Header set Connection keep-alive
+</IfModule>
+
+## Réduire les délais de préchargement DNS ##
+<IfModule mod_headers.c>
+    Header set Link "<https://fonts.googleapis.com>; rel=preconnect"
+    Header set Link "<https://fonts.gstatic.com>; rel=preconnect"
 </IfModule>
 
 # Disable index view

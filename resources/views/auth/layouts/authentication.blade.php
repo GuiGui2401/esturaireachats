@@ -33,11 +33,11 @@
         rel="stylesheet">
 
     <!-- CSS Files -->
-    <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}">
+    <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
     @if ($rtl == 1)
-        <link rel="stylesheet" href="{{ static_asset('assets/css/bootstrap-rtl.min.css') }}">
+        <link rel="stylesheet" href="{{ static_asset('assets/css/bootstrap-rtl.min.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
     @endif
-    <link rel="stylesheet" href="{{ static_asset('assets/css/aiz-core.css?v=') }}{{ rand(1000, 9999) }}">
+    <link rel="stylesheet" href="{{ static_asset('assets/css/aiz-core.css?v=') }}{{ rand(1000, 9999) }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
 
     <style>
         :root {

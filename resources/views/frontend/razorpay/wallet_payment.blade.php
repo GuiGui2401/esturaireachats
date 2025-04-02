@@ -2,8 +2,8 @@
 <html>
 <head>
     <title></title>
-    <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}">
-    <link rel="stylesheet" href="{{ static_asset('assets/css/aiz-core.css') }}">
+    <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
+    <link rel="stylesheet" href="{{ static_asset('assets/css/aiz-core.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
     <link rel="stylesheet" href="{{ static_asset('assets/css/custom-style.css') }}">
 </head>
 <body>

@@ -21,11 +21,11 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700">
 
 	<!-- aiz core css -->
-	<link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}">
+	<link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
     @if(\App\Models\Language::where('code', Session::get('locale', Config::get('app.locale')))->first()->rtl == 1)
-    <link rel="stylesheet" href="{{ static_asset('assets/css/bootstrap-rtl.min.css') }}">
+    <link rel="stylesheet" href="{{ static_asset('assets/css/bootstrap-rtl.min.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
     @endif
-	<link rel="stylesheet" href="{{ static_asset('assets/css/aiz-seller.css') }}">
+	<link rel="stylesheet" href="{{ static_asset('assets/css/aiz-seller.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
 
     <style>
         body {

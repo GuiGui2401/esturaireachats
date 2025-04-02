@@ -4,8 +4,8 @@
 <head>
     <title></title>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no"/>
-    <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}">
-    <link rel="stylesheet" href="{{ static_asset('assets/css/aiz-core.css') }}">
+    <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
+    <link rel="stylesheet" href="{{ static_asset('assets/css/aiz-core.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
     <link rel="stylesheet" href="{{ static_asset('assets/css/custom-style.css') }}">
 </head>
 <body>
