@@ -44,11 +44,21 @@
                                     <!-- Image -->
                                     <div
                                         class="d-block w-100 mw-100 overflow-hidden h-250px h-md-550px h-lg-750px h-xl-800px overflow-hidden">
-                                        <img class="img-fluid h-250px h-md-550px h-lg-750px h-xl-800px m-auto has-transition ls-is-cached lazyloaded"
-                                            style="width:2000px;"
-                                            src="{{ $slider ? my_asset($slider->file_name) : static_asset('assets/img/placeholder.jpg') }}"
-                                            alt="{{ env('APP_NAME') }} promo"
-                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
+                                        <img
+    fetchpriority="high"
+    class="img-fluid h-250px h-md-550px h-lg-750px h-xl-800px m-auto has-transition" {{-- Removed lazyloaded --}}
+    sizes="(max-width: 767px) 100vw, (max-width: 991px) 80vw, 1200px" {{-- Adjust sizes based on your layout --}}
+    srcset="
+        {{ my_asset(get_resized_image_url($slider->file_name, 'small')) }} 480w,
+        {{ my_asset(get_resized_image_url($slider->file_name, 'medium')) }} 800w,
+        {{ my_asset(get_resized_image_url($slider->file_name, 'large')) }} 1200w,
+        {{ my_asset(get_resized_image_url($slider->file_name, 'xlarge')) }} 1600w
+    "
+    src="{{ my_asset(get_resized_image_url($slider->file_name, 'large')) }}" {{-- Fallback src --}}
+    alt="{{ env('APP_NAME') }} promo"
+    onerror="..."
+    {{-- Remove inline style="width:2000px;" --}}
+    >
                                     </div>
                                 </a>
                             </div>

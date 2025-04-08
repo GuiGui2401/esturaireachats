@@ -77,6 +77,22 @@ Route::controller(DemoController::class)->group(function () {
     Route::get('/migrate_attribute_values', 'migrate_attribute_values');
 });
 
+Route::get('/debug-routes', function () {
+    $routes = Route::getRoutes(); // Récupère la collection de routes
+    $routeList = [];
+    foreach ($routes as $route) {
+        $routeList[] = [
+            'uri' => $route->uri(),
+            'methods' => implode(', ', $route->methods()),
+            'action' => $route->getActionName(),
+            'name' => $route->getName(),
+            'middleware' => implode(', ', $route->gatherMiddleware()),
+        ];
+    }
+    return response()->json($routeList); // Affiche les routes en JSON
+    // Ou utilisez dd($routeList); pour un affichage de débogage
+});
+
 Route::get('/refresh-csrf', function () {
     return csrf_token();
 });
