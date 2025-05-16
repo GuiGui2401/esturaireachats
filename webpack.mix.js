@@ -16,8 +16,11 @@ const mix = require('laravel-mix');
 require('laravel-mix-imagemin');
 
 mix.js('resources/js/app.js', 'public/js')
+    .js('resources/js/jquery-3.6.0.min.js','public/js/jquery-3.6.0.min.js')
+    .js('resources/js/popper.min.js','public/js/popper.min.js')
     .js('resources/js/aiz-core.js', 'public/js/aiz-core.min.js')
     .js('resources/js/vendors.js', 'public/js/vendors.min.js')
+    .js('resources/js/bootstrap.js', 'public/js/bootstrap.min.js')
     .sass('resources/sass/vendors.scss', 'public/css/vendors.min.css')
     .sass('resources/sass/aiz-core.scss', 'public/css/aiz-core.min.css')
     .sass('resources/sass/custom-style.scss', 'public/css/custom-style.min.css')

@@ -99,7 +99,7 @@ class SellerPackageController extends Controller
     public function update(Request $request, $id)
     {
         $seller_package = SellerPackage::findOrFail($id);
-        if($request->lang == env("DEFAULT_LANGUAGE")){
+        if($request->lang == env('DEFAULT_LANGUAGE')){
             $seller_package->name = $request->name;
         }
         $seller_package->amount = $request->amount;

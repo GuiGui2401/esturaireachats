@@ -1,5 +1,5 @@
-    <!-- Top Bar Banner -->
-    @php
+<!-- Top Bar Banner -->
+@php
         $topbar_banner = get_setting('topbar_banner');
         $topbar_banner_medium = get_setting('topbar_banner_medium');
         $topbar_banner_small = get_setting('topbar_banner_small');
@@ -113,6 +113,39 @@
     </div>
 
     <header class="@if (get_setting('header_stikcy') == 'on') sticky-top @endif z-1020 bg-white">
+        <style>
+            .search-input-box {
+                position: relative;
+            }
+            .search-icon-group {
+                position: absolute;
+                right: 8px;
+                top: 50%;
+                transform: translateY(-50%);
+                display: flex;
+                align-items: center;
+            }
+            .upload-btn-wrapper {
+                position: relative;
+                overflow: hidden;
+                display: inline-block;
+            }
+            .upload-btn-wrapper input[type=file] {
+                font-size: 100px;
+                position: absolute;
+                left: 0;
+                top: 0;
+                opacity: 0;
+                cursor: pointer;
+            }
+            #search-by-image {
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            #search-by-image:hover {
+                opacity: 0.7;
+            }
+        </style>
         <!-- Search Bar -->
         <div class="position-relative logo-bar-area border-bottom border-md-nonea z-1025">
             <div class="container">
@@ -169,18 +202,32 @@
                                             id="search" name="keyword"
                                             @isset($query)
                                             value="{{ $query }}"
-                                        @endisset
+                                            @endisset
                                             placeholder="{{ translate('I am shopping for...') }}" autocomplete="off">
 
-                                        <svg id="Group_723" data-name="Group 723" xmlns="http://www.w3.org/2000/svg"
-                                            width="20.001" height="20" viewBox="0 0 20.001 20">
-                                            <path id="Path_3090" data-name="Path 3090"
-                                                d="M9.847,17.839a7.993,7.993,0,1,1,7.993-7.993A8,8,0,0,1,9.847,17.839Zm0-14.387a6.394,6.394,0,1,0,6.394,6.394A6.4,6.4,0,0,0,9.847,3.453Z"
-                                                transform="translate(-1.854 -1.854)" fill="#b5b5bf" />
-                                            <path id="Path_3091" data-name="Path 3091"
-                                                d="M24.4,25.2a.8.8,0,0,1-.565-.234l-6.15-6.15a.8.8,0,0,1,1.13-1.13l6.15,6.15A.8.8,0,0,1,24.4,25.2Z"
-                                                transform="translate(-5.2 -5.2)" fill="#b5b5bf" />
-                                        </svg>
+                                        <div class="search-icon-group">
+                                            <!-- Icône de caméra pour la recherche par image -->
+                                            <button type="button" class="btn btn-link p-0 mr-2" id="search-by-image">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b5b5bf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                                    <circle cx="12" cy="13" r="4"></circle>
+                                                </svg>
+                                            </button>
+                                            
+                                            <!-- Icône de loupe existante -->
+                                            <svg id="Group_723" data-name="Group 723" xmlns="http://www.w3.org/2000/svg"
+                                                width="20.001" height="20" viewBox="0 0 20.001 20">
+                                                <path id="Path_3090" data-name="Path 3090"
+                                                    d="M9.847,17.839a7.993,7.993,0,1,1,7.993-7.993A8,8,0,0,1,9.847,17.839Zm0-14.387a6.394,6.394,0,1,0,6.394,6.394A6.4,6.4,0,0,0,9.847,3.453Z"
+                                                    transform="translate(-1.854 -1.854)" fill="#b5b5bf" />
+                                                <path id="Path_3091" data-name="Path 3091"
+                                                    d="M24.4,25.2a.8.8,0,0,1-.565-.234l-6.15-6.15a.8.8,0,0,1,1.13-1.13l6.15,6.15A.8.8,0,0,1,24.4,25.2Z"
+                                                    transform="translate(-5.2 -5.2)" fill="#b5b5bf" />
+                                            </svg>
+                                        </div>
+                                        
+                                        <!-- Input caché pour téléchargement d'image -->
+                                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
                                     </div>
                                 </div>
                             </form>
@@ -597,6 +644,32 @@
                 </div>
             </div>
         </div>
+        <!-- Modal pour la recherche par image -->
+        <div class="modal fade" id="image-search-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ translate('Search by Image') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="image-preview mb-3">
+                            <img id="uploaded-image-preview" class="img-fluid" style="max-height: 300px; max-width: 100%;">
+                        </div>
+                        <div class="upload-btn-wrapper mb-3">
+                            <button class="btn btn-outline-secondary">{{ translate('Change Image') }}</button>
+                            <input type="file" id="change-image" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                        <button type="button" class="btn btn-primary" id="search-image-btn">{{ translate('Search') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
 
     <!-- Top Menu Sidebar -->
@@ -744,3 +817,111 @@
             }
         </script>
     @endsection
+    <script src="{{ static_asset('assets/js/popper.min.js') }}"></script>
+    <script src="{{ static_asset('assets/js/jquery-3.6.0.min.js') }}" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="{{ static_asset('assets/js/bootstrap.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.7/metisMenu.min.js" integrity="sha512-o36qZrjup13zLM13tqxvZTaXMXs+5i4TL5UWaDCsmbp5qUcijtdCFuW9a/3qnHGfWzFHBAln8ODjf7AnUNebVg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+         <script>
+        $(document).ready(function() {
+            // Sélectionner les éléments
+            const searchByImageBtn = $('#search-by-image');
+            const imageUpload = $('#image-upload');
+            
+            // Gestionnaire pour le clic sur l'icône de caméra
+            searchByImageBtn.on('click', function() {
+                console.log('Camera icon clicked');
+                imageUpload.click();
+            });
+            
+            // Gestionnaire pour le téléchargement d'image initial
+            imageUpload.on('change', function(e) {
+                console.log('Image selected');
+                if (this.files && this.files[0]) {
+                    // Traiter directement l'image sans passer par la modal
+                    handleAndSendImage(this.files[0]);
+                }
+            });
+            
+            // Fonction pour traiter et envoyer l'image directement
+            function handleAndSendImage(imageFile) {
+                // Vérifier le type de fichier
+                if (!imageFile.type.match('image.*')) {
+                    alert('Veuillez sélectionner un fichier image');
+                    return;
+                }
+                
+                // Vérifier la taille du fichier (max 5 MB)
+                if (imageFile.size > 5 * 1024 * 1024) {
+                    alert('La taille du fichier ne doit pas dépasser 5 Mo');
+                    return;
+                }
+                // Créer un lecteur de fichier pour prévisualiser l'image
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Créer un aperçu flottant
+                    const previewBox = $(`
+                        <div id="image-preview-box" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; background: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 15px rgba(0,0,0,0.3); max-width: 90%;">
+                            <div style="text-align: right; margin-bottom: 10px;">
+                                <button id="close-preview" class="btn btn-sm btn-light">×</button>
+                            </div>
+                            <div style="text-align: center; margin-bottom: 15px;">
+                                <img src="${e.target.result}" style="max-width: 100%; max-height: 300px;">
+                            </div>
+                            <div style="display: flex; justify-content: flex-end;">
+                                <button id="cancel-search" class="btn btn-secondary mr-2">Annuler</button>
+                                <button id="confirm-search" class="btn btn-primary">Rechercher</button>
+                            </div>
+                        </div>
+                    `);
+                    
+                    // Ajouter un fond semi-transparent
+                    const backdrop = $('<div id="preview-backdrop" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9998;"></div>');
+                    
+                    // Ajouter à la page
+                    $('body').append(backdrop).append(previewBox);
+                    
+                    // Gérer les clics sur les boutons
+                    $('#close-preview, #cancel-search, #preview-backdrop').on('click', function() {
+                        $('#image-preview-box, #preview-backdrop').remove();
+                    });
+                    
+                    $('#confirm-search').on('click', function() {
+                        $('#image-preview-box, #preview-backdrop').remove();
+
+                    // Afficher un indicateur de chargement simple sans modal
+                    const loadingIndicator = $('<div id="loading-indicator" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;"><div style="background: white; padding: 20px; border-radius: 5px;"><div class="spinner-border text-primary" role="status"></div><div class="mt-2">Analyse de l\'image en cours...</div></div></div>');
+                    $('body').append(loadingIndicator);
+                    
+                    // Préparer les données
+                    const formData = new FormData();
+                    formData.append('image', imageFile);
+                    formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+                    
+                    // Envoyer l'image au serveur
+                    $.ajax({
+                        url: '/search-by-image',
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(data) {
+                            $('#loading-indicator').remove();
+                            // Rediriger vers la page de résultats
+                            window.location.href = data.redirect_url;
+                        },
+                        error: function(error) {
+                            $('#loading-indicator').remove();
+                            console.error('Error:', error);
+                            alert('Une erreur est survenue lors de la recherche par image');
+                        }
+                        });
+                    });
+                };
+                
+                reader.readAsDataURL(imageFile);
+            }
+            
+            console.log('Script de recherche par image chargé');
+        });
+    </script>
+    

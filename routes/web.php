@@ -195,6 +195,8 @@ Route::controller(SearchController::class)->group(function () {
     Route::post('/ajax-search', 'ajax_search')->name('search.ajax');
     Route::get('/category/{category_slug}', 'listingByCategory')->name('products.category');
     Route::get('/brand/{brand_slug}', 'listingByBrand')->name('products.brand');
+    Route::post('/search-by-image', 'searchByImage')->name('search.by.image');
+    Route::get('/image-search-results', 'imageSearchResults')->name('search.image.results');
 });
 
 // Cart

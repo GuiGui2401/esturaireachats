@@ -352,6 +352,6 @@
 
         <script
             src="https://maps.googleapis.com/maps/api/js?key={{ env('MAP_API_KEY') }}&libraries=places&language=en&callback=initialize"
-            async defer></script>
+            defer></script>
     @endif
 @endsection

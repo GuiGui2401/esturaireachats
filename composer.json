@@ -12,12 +12,14 @@
         "authorizenet/authorizenet": "^2.0",
         "enshrined/svg-sanitize": "^0.15.4",
         "fideloper/proxy": "^4.4",
+        "fruitcake/laravel-cors": "^3.0",
         "genealabs/laravel-sign-in-with-apple": "*",
         "genealabs/laravel-socialiter": "*",
         "guzzlehttp/guzzle": "^7.8",
         "instamojo/instamojo-php": "^0.4.0",
         "intervention/image": "^3.11",
         "iyzico/iyzipay-php": "^2.0",
+        "jenssegers/imagehash": "*",
         "kingflamez/laravelrave": "dev-master",
         "laracasts/flash": "^3.2",
         "laravel/cashier-paddle": "^1.11",
@@ -34,6 +36,8 @@
         "mpdf/mpdf": "^8.1",
         "myfatoorah/laravel-package": "^2.1",
         "niklasravnsborg/laravel-pdf": "^4.1",
+        "openai-php/laravel": "^0.10.1",
+        "osenco/mpesa": "^2.1",
         "paypal/paypal-checkout-sdk": "dev-master",
         "predis/predis": "^2.1",
         "psr/log": "^2.0",
@@ -95,6 +99,7 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "allow-plugins": {
+            "php-http/discovery": true,
             "symfony/thanks": true
         }
     },

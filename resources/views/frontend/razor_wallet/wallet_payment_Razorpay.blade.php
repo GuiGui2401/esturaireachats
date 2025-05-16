@@ -5,7 +5,7 @@
 @endsection
 
 @section('script')
-    <script src="https://checkout.razorpay.com/v1/checkout.js" async defer></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
     <script>
         var options = {
             "key": "{{ env('RAZOR_KEY') }}", // Enter the Key ID generated from the Dashboard

@@ -216,7 +216,7 @@ class WholesaleService
             }
         }
 
-        if($request->lang == env("DEFAULT_LANGUAGE")){
+        if($request->lang == env('DEFAULT_LANGUAGE')){
             $product->name          = $request->name;
             $product->unit          = $request->unit;
             $product->description   = $request->description;

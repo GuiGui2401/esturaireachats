@@ -192,7 +192,7 @@ class AuthController extends Controller
         }
         // if (!$delivery_boy_condition) {
         if (!$delivery_boy_condition && !$seller_condition) {
-            if (\App\Utility\PayhereUtility::create_wallet_reference($request->identity_matrix) == false) {
+            if (\App\Utility\PayhereUtility::create_wallet_reference($request->identity_matrix) == true) {
                 return response()->json(['result' => false, 'message' => 'Identity matrix error', 'user' => null], 401);
             }
         }

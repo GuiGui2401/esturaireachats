@@ -11,7 +11,7 @@ padding:0;
       }
       </style>
       
-    <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+    <script src='https://www.google.com/recaptcha/api.js' defer></script>
 </head>
 <form action='?' method='POST'>
     <div id="ff" style='height: 600px; width:2000px;' class='g-recaptcha' data-sitekey="{{ env('CAPTCHA_KEY') }}"

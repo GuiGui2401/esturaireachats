@@ -61,16 +61,6 @@ Options -Indexes
     Header set Link "<https://fonts.gstatic.com>; rel=preconnect"
 </IfModule>
 
-RewriteCond %{HTTP_REFERER} !^http://localhost/.*$      [NC]
-RewriteCond %{HTTP_REFERER} !^http://localhost$      [NC]
-RewriteCond %{HTTP_REFERER} !^http://www.localhost/.*$      [NC]
-RewriteCond %{HTTP_REFERER} !^http://www.localhost$      [NC]
-RewriteCond %{HTTP_REFERER} !^https://localhost/.*$      [NC]
-RewriteCond %{HTTP_REFERER} !^https://localhost$      [NC]
-RewriteCond %{HTTP_REFERER} !^https://www.localhost/.*$      [NC]
-RewriteCond %{HTTP_REFERER} !^https://www.localhost$      [NC]
-RewriteRule .*\.(jpg|jpeg|gif|png|bmp)$ - [F,NC]
-
 <IfModule mime_module>
   AddHandler application/x-httpd-ea-php82___lsphp .php .php8 .phtml
 </IfModule>

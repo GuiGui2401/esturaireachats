@@ -2,6 +2,7 @@
 <html>
 <head>
     <title></title>
+     
     <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
     <link rel="stylesheet" href="{{ static_asset('assets/css/aiz-core.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
     <link rel="stylesheet" href="{{ static_asset('assets/css/custom-style.css') }}">
@@ -10,7 +11,7 @@
     <section class="py-4 mb-4 bg-light">
         <div class="container text-center">
 
-            <form action="{!!route('api.razorpay.payment')!!}" method="POST" id='rozer-pay' style="display: none;">
+            <form action="{!!route('api.razorpay.init')!!}" method="POST" id='rozer-pay' style="display: none;">
                 <!-- Note that the amount is in paise = 50 INR -->
                 <!--amount need to be in paisa-->
                 <script src="https://checkout.razorpay.com/v1/checkout.js"
@@ -23,7 +24,7 @@
                         data-image="{{ uploaded_asset(get_setting('header_logo')) }}"
                         data-prefill.name= "{{ $user->name}}"
                         data-prefill.email= "{{ $user->email}}"
-                        data-theme.color="#ff7529" async defer>
+                        data-theme.color="#ff7529" defer>
                 </script>
                 <input type="hidden" name="_token" value="{!!csrf_token()!!}">
             </form>
@@ -31,7 +32,7 @@
     </section>
 
     <!-- SCRIPTS -->
-    <script src="{{ static_asset('assets/js/vendors.js') }}" async defer></script>
+    <script src="{{ static_asset('assets/js/vendors.js') }}" defer></script>
 
     <script type="text/javascript">
         $(document).ready(function(){

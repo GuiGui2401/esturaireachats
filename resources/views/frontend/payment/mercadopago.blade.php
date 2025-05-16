@@ -60,7 +60,7 @@ $preference->save();
       100% { transform: rotate(360deg); }
     }
     </style>
-    <script src="https://sdk.mercadopago.com/js/v2" async defer></script>
+    <script src="https://sdk.mercadopago.com/js/v2" defer></script>
   </head>
   <body>
     <div class="cho-container"style="display: none;"></div>

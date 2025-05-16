@@ -37,7 +37,7 @@
             }
         }
     </style>
-    <script src="https://js.stripe.com/v3/" async defer></script>
+    <script src="https://js.stripe.com/v3/" defer></script>
 </head>
 
 <body>

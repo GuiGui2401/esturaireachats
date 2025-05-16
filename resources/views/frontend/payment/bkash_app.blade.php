@@ -4,6 +4,7 @@
 <head>
     <title></title>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no"/>
+     
     <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
     <link rel="stylesheet" href="{{ static_asset('assets/css/aiz-core.css') }}" media="print" onload="this.onload=null;this.removeAttribute('media');">
     <link rel="stylesheet" href="{{ static_asset('assets/css/custom-style.css') }}">
@@ -18,12 +19,12 @@
     </section>
 
     <!-- SCRIPTS -->
-    <script src="{{ static_asset('assets/js/vendors.js') }}" async defer></script>
+    <script src="{{ static_asset('assets/js/vendors.js') }}" defer></script>
 
     @if (get_setting('bkash_sandbox') == 1)
-        <script src="https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js" async defer></script>
+        <script src="https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js" defer></script>
     @else
-        <script src="https://scripts.pay.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout.js" async defer></script>
+        <script src="https://scripts.pay.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout.js" defer></script>
     @endif
 
     <script type="text/javascript">        

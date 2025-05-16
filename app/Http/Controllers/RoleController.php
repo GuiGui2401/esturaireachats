@@ -97,7 +97,7 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         $role = Role::findOrFail($id);
-        if ($request->lang == env("DEFAULT_LANGUAGE")) {
+        if ($request->lang == env('DEFAULT_LANGUAGE')) {
             $role->name = $request->name;
         }
         $role->syncPermissions($request->permissions);

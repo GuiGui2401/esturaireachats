@@ -7,9 +7,7 @@ use App\Models\Upload;
 use Response;
 use Auth;
 use Storage;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Imagick\Driver;
-use Intervention\Image\Encoders\WebpEncoder;
+use Image;
 use enshrined\svgSanitize\Sanitizer;
 
 class AizUploadController extends Controller
@@ -65,78 +63,137 @@ class AizUploadController extends Controller
     {
         return view('uploader.aiz-uploader');
     }
-
     public function upload(Request $request)
     {
-        $type = [
-            "jpg" => "image", "jpeg" => "image", "png" => "image", "svg" => "image", "gif" => "image",
-            "webp" => "image", "mp4" => "video", "zip" => "archive", "pdf" => "document"
-        ];
+        $type = array(
+            "jpg" => "image",
+            "jpeg" => "image",
+            "png" => "image",
+            "svg" => "image",
+            "webp" => "image",
+            "gif" => "image",
+            "mp4" => "video",
+            "mpg" => "video",
+            "mpeg" => "video",
+            "webm" => "video",
+            "ogg" => "video",
+            "avi" => "video",
+            "mov" => "video",
+            "flv" => "video",
+            "swf" => "video",
+            "mkv" => "video",
+            "wmv" => "video",
+            "wma" => "audio",
+            "aac" => "audio",
+            "wav" => "audio",
+            "mp3" => "audio",
+            "zip" => "archive",
+            "rar" => "archive",
+            "7z" => "archive",
+            "doc" => "document",
+            "txt" => "document",
+            "docx" => "document",
+            "pdf" => "document",
+            "csv" => "document",
+            "xml" => "document",
+            "ods" => "document",
+            "xlr" => "document",
+            "xls" => "document",
+            "xlsx" => "document"
+        );
 
         if ($request->hasFile('aiz_file')) {
             $upload = new Upload;
             $extension = strtolower($request->file('aiz_file')->getClientOriginalExtension());
-            
-            if (!isset($type[$extension])) {
-                return response()->json(["error" => "Unsupported file type"], 400);
+
+            if (
+                env('DEMO_MODE') == 'On' &&
+                isset($type[$extension]) &&
+                $type[$extension] == 'archive'
+            ) {
+                return '{}';
             }
 
-            $file_name = pathinfo($request->file('aiz_file')->getClientOriginalName(), PATHINFO_FILENAME);
-            $upload->file_original_name = $file_name;
-            
-            if ($extension == 'svg') {
-                $sanitizer = new Sanitizer();
-                $cleanSVG = $sanitizer->sanitize(file_get_contents($request->file('aiz_file')));
-                file_put_contents($request->file('aiz_file'), $cleanSVG);
-            }
-            
-            $path = $request->file('aiz_file')->store('uploads/all', 'local');
-            $size = $request->file('aiz_file')->getSize();
-            
-            // Image processing
-            if ($type[$extension] == 'image' && get_setting('disable_image_optimization') != 1) {
-                try {
-                    $manager = new ImageManager(new Driver());
-                    $img = $manager->read($request->file('aiz_file')->getRealPath());
-                    
-                    $webp_path = storage_path("app/public/" . str_replace(".$extension", ".webp", $path));
-                    $thumbnail_path = str_replace(".webp", "_thumb.webp", $webp_path);
-                    
-                    if (!file_exists($webp_path)) { // Caching to avoid re-processing
-                        $img = $img->resize(1500, null, function ($constraint) {
-                            $constraint->aspectRatio();
-                        })->encode(new WebpEncoder(quality: 80));
-                        $img->save($webp_path);
+            if (isset($type[$extension])) {
+                $upload->file_original_name = null;
+                $arr = explode('.', $request->file('aiz_file')->getClientOriginalName());
+                for ($i = 0; $i < count($arr) - 1; $i++) {
+                    if ($i == 0) {
+                        $upload->file_original_name .= $arr[$i];
+                    } else {
+                        $upload->file_original_name .= "." . $arr[$i];
                     }
-                    
-                    if (!file_exists($thumbnail_path)) { // Caching for thumbnails
-                        $thumbnail = $img->resize(300, null, function ($constraint) {
-                            $constraint->aspectRatio();
-                        });
-                        $thumbnail->save($thumbnail_path);
-                    }
-                    
-                    $path = str_replace(storage_path("app/public/"), "", $webp_path);
-                } catch (\Exception $e) {
-                    return response()->json(["error" => "Image processing failed"], 500);
                 }
+
+                if ($extension == 'svg') {
+                    $sanitizer = new Sanitizer();
+                    // Load the dirty svg
+                    $dirtySVG = file_get_contents($request->file('aiz_file'));
+
+                    // Pass it to the sanitizer and get it back clean
+                    $cleanSVG = $sanitizer->sanitize($dirtySVG);
+
+                    // Load the clean svg
+                    file_put_contents($request->file('aiz_file'), $cleanSVG);
+                }
+
+                $path = $request->file('aiz_file')->store('uploads/all', 'local');
+                $size = $request->file('aiz_file')->getSize();
+
+                // Return MIME type ala mimetype extension
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+
+                // Get the MIME type of the file
+                $file_mime = finfo_file($finfo, base_path('public/') . $path);
+
+
+                if ($type[$extension] == 'image' && get_setting('disable_image_optimization') != 1) {
+                    try {
+                        $img = Image::make($request->file('aiz_file')->getRealPath())->encode();
+                        $height = $img->height();
+                        $width = $img->width();
+                        if ($width > $height && $width > 1500) {
+                            $img->resize(1500, null, function ($constraint) {
+                                $constraint->aspectRatio();
+                            });
+                        } elseif ($height > 1500) {
+                            $img->resize(null, 800, function ($constraint) {
+                                $constraint->aspectRatio();
+                            });
+                        }
+                        $img->save(base_path('public/') . $path);
+                        clearstatcache();
+                        $size = $img->filesize();
+                    } catch (\Exception $e) {
+                        //dd($e);
+                    }
+                }
+
+                if (env('FILESYSTEM_DRIVER') != 'local') {
+
+                    Storage::disk(env('FILESYSTEM_DRIVER'))->put(
+                        $path,
+                        file_get_contents(base_path('public/') . $path),
+                        [
+                            'visibility' => 'public',
+                            'ContentType' =>  $extension == 'svg' ? 'image/svg+xml' : $file_mime
+                        ]
+                    );
+                    // dd($storage);
+                    if ($arr[0] != 'updates') {
+                        unlink(base_path('public/') . $path);
+                    }
+                }
+
+                $upload->extension = $extension;
+                $upload->file_name = $path;
+                $upload->user_id = Auth::user()->id;
+                $upload->type = $type[$upload->extension];
+                $upload->file_size = $size;
+                $upload->save();
             }
-
-            if (env('FILESYSTEM_DRIVER') != 'local') {
-                Storage::disk(env('FILESYSTEM_DRIVER'))->put($path, file_get_contents(storage_path("app/public/" . $path)), ['visibility' => 'public']);
-            }
-
-            $upload->extension = 'webp';
-            $upload->file_name = $path;
-            $upload->user_id = Auth::user()->id;
-            $upload->type = $type[$extension];
-            $upload->file_size = $size;
-            $upload->save();
-
-            return response()->json(["success" => "File uploaded successfully", "file" => $upload]);
+            return '{}';
         }
-
-        return response()->json(["error" => "No file uploaded"], 400);
     }
 
     public function get_uploaded_files(Request $request)

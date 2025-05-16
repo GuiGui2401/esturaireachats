@@ -147,7 +147,7 @@ class ProductController extends Controller
         if (auth()->user()->id != $product->user_id) {
             return $this->failed(translate('This product is not yours.'));
         }
-        $product->lang =  $request->lang == null ? env("DEFAULT_LANGUAGE") : $request->lang;
+        $product->lang =  $request->lang == null ? env('DEFAULT_LANGUAGE') : $request->lang;
 
         return new ProductDetailsCollection($product);
         /* $data = response()->json([

@@ -159,7 +159,7 @@ class CustomerProductController extends Controller
     public function update(Request $request, $id)
     {
         $customer_product                       = CustomerProduct::find($id);
-        if($request->lang == env("DEFAULT_LANGUAGE")){
+        if($request->lang == env('DEFAULT_LANGUAGE')){
             $customer_product->name             = $request->name;
             $customer_product->unit             = $request->unit;
             $customer_product->description      = $request->description;

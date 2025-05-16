@@ -186,7 +186,7 @@
 
 @section('script')
     @if(get_setting('google_recaptcha') == 1)
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <script src="https://www.google.com/recaptcha/api.js" defer></script>
     @endif
 
     <script type="text/javascript">

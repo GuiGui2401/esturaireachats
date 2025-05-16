@@ -36,5 +36,7 @@ class VerifyCsrfToken extends Middleware
         '/rozer*',
         '/phonepe*',
         'paddle/*',
+        'api/v2/chatbot/message',
+        'api/v2/chatbot/upload-image',
     ];
 }

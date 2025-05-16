@@ -110,7 +110,7 @@
 @endsection
 
 @section('script')
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js" defer></script>
 <script type="text/javascript">
     // making the CAPTCHA  a required field for form submission
     $(document).ready(function(){
