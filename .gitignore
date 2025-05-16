@@ -5,7 +5,6 @@
 /node_modules
 /storage/*.key
 /storage/debugbar
-/vendor
 /temp
 /.idea
 /.vscode
