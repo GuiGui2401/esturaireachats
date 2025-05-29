@@ -143,7 +143,7 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = Category::findOrFail($id);
-        if($request->lang == env("DEFAULT_LANGUAGE")){
+        if($request->lang == env('DEFAULT_LANGUAGE')){
             $category->name = $request->name;
         }
         if($request->order_level != null) {

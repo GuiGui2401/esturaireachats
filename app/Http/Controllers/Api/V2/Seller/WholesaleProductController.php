@@ -74,7 +74,7 @@ class WholesaleProductController extends Controller
     public function product_edit(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-        $product->lang =  $request->lang == null ? env("DEFAULT_LANGUAGE") : $request->lang;
+        $product->lang =  $request->lang == null ? env('DEFAULT_LANGUAGE') : $request->lang;
         return new WholesaleProductDetailsCollection($product);
     }
 

@@ -1,64 +1,55 @@
-@extends('frontend.layouts.user_panel')
+@extends('seller.layouts.app')
 
 @section('panel_content')
-    <div class="card rounded-0 shadow-none border">
-        <div class="card-header border-bottom-0">
-            <h5 class="mb-0 fs-20 fw-700 text-dark">{{ translate('All Bidded Products') }}</h5>
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0 h6">{{ translate('Bidded Products') }}</h5>
         </div>
-        <div class="card-body py-0">
+        <div class="card-body">
             <table class="table aiz-table mb-0">
-                <thead class="text-gray fs-12">
+                <thead>
                     <tr>
-                        <th class="pl-0">#</th>
-                        <th width="40%" >{{ translate('Product')}}</th>
-                        <th data-breakpoints="md">{{ translate('My Bid')}}</th>
-                        <th data-breakpoints="md">{{ translate('Highest Bid')}}</th>
-                        <th data-breakpoints="md">{{ translate('End Date')}}</th>
-                        <th class="text-right pr-0">{{ translate('Action')}}</th>
+                        <th>#</th>
+                        <th width="40%" >{{ translate('Product Name')}}</th>
+                        <th data-breakpoints="md">{{ translate('My Bidded Amount')}}</th>
+                        <th data-breakpoints="md">{{ translate('Highest Bid Amount')}}</th>
+                        <th data-breakpoints="md">{{ translate('Auction End Date')}}</th>
+                        <th class="text-right">{{ translate('Action')}}</th>
                     </tr>
                 </thead>
-                <tbody class="fs-14">
+                <tbody>
                     @foreach ($bids as $key => $bid_id)
                         @php
-                            $bid = get_auction_product_bid_info($bid_id->id);
+                            $bid = \App\Models\AuctionProductBid::find($bid_id->id);;
                         @endphp
                         <tr>
-                            <td class="pl-0" style="vertical-align: middle;">{{ sprintf('%02d', ($key+1) + ($bids->currentPage() - 1)*$bids->perPage()) }}</td>
-                            <td class="text-dark" style="vertical-align: middle;">
-                                <a href="{{ route('auction-product', $bid->product->slug) }}" class="text-reset hov-text-primary d-flex align-items-center">
-                                    <img class="lazyload img-fit size-70px"
-                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                        data-src="{{ uploaded_asset($bid->product->thumbnail_img) }}"
-                                        alt="{{  $bid->product->getTranslation('name')  }}"
-                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                                    <span class="ml-1">{{ $bid->product->getTranslation('name') }}</span>
-                                </a>
-                            </td>
-                            <td class="fw-700" style="vertical-align: middle;">{{ single_price($bid->amount) }}</td>
-                            <td style="vertical-align: middle;">
+                            <td>{{ ($key+1) + ($bids->currentPage() - 1)*$bids->perPage() }}</td>
+                            <td><a href="{{ route('auction-product', $bid->product->slug) }}">{{ $bid->product->getTranslation('name') }}</a></td>
+                            <td>{{ single_price($bid->amount) }}</td>
+                            <td>
                                 @php $highest_bid = $bid->where('product_id',$bid->product_id)->max('amount'); @endphp
-                                <span class="badge badge-inline @if($bid->amount < $highest_bid) badge-danger @else badge-success @endif p-3 fs-12" style="border-radius: 25px; min-width: 80px !important;">
+                                <span class="badge badge-inline @if($bid->amount < $highest_bid) badge-danger @else badge-success @endif">
                                     {{ single_price($highest_bid) }}
                                 </span>
                             </td>
-                            <td style="vertical-align: middle;">
+                            <td>
                                 @if($bid->product->auction_end_date < strtotime("now"))
                                     {{ translate('Ended') }}
                                 @else
-                                    {{ date('d.m.Y H:i:s', $bid->product->auction_end_date) }}
+                                    {{ date('Y-m-d H:i:s', $bid->product->auction_end_date) }}
                                 @endif
                             </td>
-                            <td class="text-right pr-0" style="vertical-align: middle;">
+                            <td class="text-right">
                                 @php
                                     $order = null;
-                                    $order_detail = get_order_details_by_product($bid->product_id);
+                                    $order_detail = \App\Models\OrderDetail::where('product_id',$bid->product_id)->first();
                                     if($order_detail != null ){
-                                        $order = get_user_order_by_id($order_detail->order_id);
+                                        $order = \App\Models\Order::where('id',$order_detail->order_id)->where('user_id',Auth::user()->id)->first();
                                     }
                                 @endphp
                                 @if($bid->product->auction_end_date < strtotime("now") && $bid->amount == $highest_bid && $order == null)
                                     @php
-                                        $carts = get_user_cart();
+                                        $carts = \App\Models\Cart::where('user_id', Auth::user()->id)->get();
                                     @endphp
                                     @if(count($carts) > 0 )
                                         @php
@@ -71,21 +62,21 @@
                                             }
                                         @endphp
                                         @if($cart_has_this_product)
-                                            <button type="button" class="btn btn-sm btn-primary buy-now fw-600 rounded-0" data-toggle="tooltip" title="{{ translate('Item alreday added to the cart.') }}">
+                                            <button type="button" class="btn btn-sm btn-primary buy-now fw-600" data-toggle="tooltip" title="{{ translate('Item alreday added to the cart.') }}">
                                                 {{ translate('Buy') }}
                                             </button>
                                         @else
-                                            <button type="button" class="btn btn-sm btn-primary buy-now fw-600 rounded-0" data-toggle="tooltip" title="{{ translate('Remove other items to add auction product.') }}">
+                                            <button type="button" class="btn btn-sm btn-primary buy-now fw-600" data-toggle="tooltip" title="{{ translate('Remove other items to add auction product.') }}">
                                                 {{ translate('Buy') }}
                                             </button>
                                         @endif
                                     @else
-                                        <button type="button" class="btn btn-sm btn-primary buy-now fw-600 rounded-0" onclick="showAuctionAddToCartModal({{ $bid->product_id }})">
+                                        <button type="button" class="btn btn-sm btn-primary buy-now fw-600" onclick="showAuctionAddToCartModal({{ $bid->product_id }})">
                                             {{ translate('Buy') }}
                                         </button>
                                     @endif
                                 @elseif($order != null)
-                                    <span class="badge badge-success p-3 fs-12" style="border-radius: 25px; min-width: 80px !important;" >{{ translate('Purchased') }}</span>
+                                    <button type="button" class="btn btn-sm btn-success buy-now fw-600" >{{ translate('Purchased') }}</button>
                                 @else
                                     N\A
                                 @endif

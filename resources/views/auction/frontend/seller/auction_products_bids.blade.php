@@ -5,7 +5,7 @@
 <div class="aiz-titlebar text-left mt-2 mb-3">
     <div class="row align-items-center">
         <div class="col-auto">
-            <h3 class="h3">{{translate('Bids For').$product->name}}</h3>
+            <h1 class="h3">{{translate('Bids For').$product->name}}</h1>
         </div>
     </div>
 </div>

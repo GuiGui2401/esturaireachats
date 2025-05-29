@@ -17,9 +17,9 @@
 	                    <div class="col">
 	                    	<div class="d-flex">
 	                    		@if($stock->image == null)
-	                    			<img loading="lazy" src="{{ uploaded_asset($stock->product->thumbnail_img) }}" class="img-fit size-60px">
+	                    			<img src="{{ uploaded_asset($stock->product->thumbnail_img) }}" class="img-fit size-60px">
 	                    		@else
-	                    			<img loading="lazy" src="{{ uploaded_asset($stock->image) }}" class="img-fit size-60px">
+	                    			<img src="{{ uploaded_asset($stock->image) }}" class="img-fit size-60px">
 	                    		@endif
 	                    		<span class="flex-grow-1 ml-3 mr-0">
 			                        <div class="text-truncate-2">{{ $stock->product->name }}</div>

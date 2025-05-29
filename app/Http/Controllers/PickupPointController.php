@@ -105,7 +105,7 @@ class PickupPointController extends Controller
     public function update(Request $request, $id)
     {
         $pickup_point = PickupPoint::findOrFail($id);
-        if($request->lang == env("DEFAULT_LANGUAGE")){
+        if($request->lang == env('DEFAULT_LANGUAGE')){
             $pickup_point->name = $request->name;
             $pickup_point->address = $request->address;
         }

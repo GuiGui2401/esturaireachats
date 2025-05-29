@@ -1,4 +1,4 @@
-<script src="{{ static_asset('assets/js/vendors.js') }}" async defer></script>
+<script src="{{ static_asset('assets/js/vendors.js') }}" defer></script>
 <script>
     $('.password-toggle').click(function(){
         var $this = $(this);

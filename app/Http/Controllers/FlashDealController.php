@@ -137,7 +137,7 @@ class FlashDealController extends Controller
 
         $flash_deal->background_color = $request->background_color;
 
-        if($request->lang == env("DEFAULT_LANGUAGE")){
+        if($request->lang == env('DEFAULT_LANGUAGE')){
           $flash_deal->title = $request->title;
           if (($flash_deal->slug == null) || ($flash_deal->title != $request->title)) {
               $flash_deal->slug = strtolower(str_replace(' ', '-', $request->title) . '-' . Str::random(5));

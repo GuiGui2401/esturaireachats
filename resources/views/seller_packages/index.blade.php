@@ -6,11 +6,13 @@
 		<div class="col-md-6">
 			<h1 class="h3">{{translate('All Seller Packages')}}</h1>
 		</div>
-		<div class="col-md-6 text-md-right">
-			<a href="{{ route('seller_packages.create') }}" class="btn btn-circle btn-info">
-				<span>{{translate('Add New Package')}}</span>
-			</a>
-		</div>
+        @can('add_seller_package')
+            <div class="col-md-6 text-md-right">
+                <a href="{{ route('seller_packages.create') }}" class="btn btn-circle btn-info">
+                    <span>{{translate('Add New Package')}}</span>
+                </a>
+            </div>
+        @endcan
 	</div>
 </div>
 
@@ -30,8 +32,12 @@
                         <b class="text-bold">{{$seller_package->duration}} {{translate('days')}}</b>
                     </p>
                     <div class="mar-top">
-						<a href="{{route('seller_packages.edit', ['id'=>$seller_package->id, 'lang'=>env('DEFAULT_LANGUAGE')] )}}" class="btn btn-sm btn-info">{{translate('Edit')}}</a>
-                        <a href="#" data-href="{{route('seller_packages.destroy', $seller_package->id)}}" class="btn btn-sm btn-danger confirm-delete">{{translate('Delete')}}</a>
+                        @can('edit_seller_package')
+						    <a href="{{route('seller_packages.edit', ['id'=>$seller_package->id, 'lang'=>env('DEFAULT_LANGUAGE')] )}}" class="btn btn-sm btn-info">{{translate('Edit')}}</a>
+                        @endcan
+                        @can('delete_seller_package')
+                            <a href="#" data-href="{{route('seller_packages.destroy', $seller_package->id)}}" class="btn btn-sm btn-danger confirm-delete">{{translate('Delete')}}</a>
+                        @endcan                        
                     </div>
                 </div>
             </div>

@@ -5,7 +5,7 @@
 <div class="aiz-titlebar text-left mt-2 mb-3">
     <div class="row align-items-center">
         <div class="col-auto">
-            <h3 class="h3">{{translate('Bids For').$product->name}}</h3>
+            <h1 class="h3">{{translate('Bids For').$product->name}}</h1>
         </div>
     </div>
 </div>
@@ -35,17 +35,15 @@
                 @foreach($bids as $key => $bid)
                 <tr>
                     <td>{{ ($key+1) + ($bids->currentPage() - 1)*$bids->perPage() }}</td>
-                    <td>{{ $bid->user->name ?? translate('User Deleted') }}</td>
-                    <td>{{ $bid->user->email ?? '' }}</td>
-                    <td>{{ $bid->user->phone ?? '' }}</td>
+                    <td>{{ $bid->user->name }}</td>
+                    <td>{{ $bid->user->email }}</td>
+                    <td>{{ $bid->user->phone }}</td>
                     <td>{{ single_price($bid->amount) }}</td>
                     <td>{{ date('d-m-Y', strtotime($bid->created_at)) }}</td>
                     <td class="text-right">
-                        @can('delete_auction_product_bids')
-                            <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('product_bids_destroy.admin', $bid->id)}}" title="{{ translate('Delete') }}">
-                                <i class="las la-trash"></i>
-                            </a>
-                        @endcan
+                        <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('product_bids_destroy.admin', $bid->id)}}" title="{{ translate('Delete') }}">
+                            <i class="las la-trash"></i>
+                        </a>
                     </td>
                 </tr>
                 @endforeach

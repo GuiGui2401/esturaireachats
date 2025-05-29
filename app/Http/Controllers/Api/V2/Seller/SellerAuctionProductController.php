@@ -45,7 +45,7 @@ class SellerAuctionProductController extends Controller
     public function edit(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-        $product->lang =  $request->lang == null ? env("DEFAULT_LANGUAGE") : $request->lang;
+        $product->lang =  $request->lang == null ? env('DEFAULT_LANGUAGE') : $request->lang;
 
         return new AuctionProductDetailsResource($product);
     }

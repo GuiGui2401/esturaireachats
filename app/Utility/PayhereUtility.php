@@ -64,10 +64,10 @@ class PayhereUtility
 
         if(Cache::get('app-activation', 'no') == 'no') {
             try {
-                $gate = "https://activeitzone.com/activation/check/flutter/".$key;
+                //$gate = "https://activeitzone.com/activation/check/flutter/".$key;
     
                 $stream = curl_init();
-                curl_setopt($stream, CURLOPT_URL, $gate);
+                //curl_setopt($stream, CURLOPT_URL, $gate);
                 curl_setopt($stream, CURLOPT_HEADER, 0);
                 curl_setopt($stream, CURLOPT_RETURNTRANSFER, 1);
                 $rn = curl_exec($stream);

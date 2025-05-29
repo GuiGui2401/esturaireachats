@@ -616,7 +616,7 @@
 
 @section('script')
     <!-- Treeview js -->
-    <script src="{{ static_asset('assets/js/hummingbird-treeview.js') }}"  async defer></script>
+    <script src="{{ static_asset('assets/js/hummingbird-treeview.js') }}"  defer></script>
 
     <script type="text/javascript">
         $(document).ready(function() {

@@ -12,6 +12,11 @@ use App\Models\Shop;
 use App\Models\Attribute;
 use App\Models\AttributeCategory;
 use App\Utility\CategoryUtility;
+use Jenssegers\ImageHash\ImageHash;
+use Jenssegers\ImageHash\Implementations\DifferenceHash;
+use App\Models\ProductImageHash;
+use Illuminate\Support\Facades\Storage;
+
 
 class SearchController extends Controller
 {
@@ -251,5 +256,332 @@ class SearchController extends Controller
             $search->query = $request->keyword;
             $search->save();
         }
+    }
+
+    public function searchByImage(Request $request)
+    {
+        try {
+            // Valider la requête
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
+            ]);
+            
+            // Stocker temporairement l'image
+            $image = $request->file('image');
+            $imagePath = $image->store('search_images', 'public');
+            $fullPath = storage_path('app/public/' . $imagePath);
+            
+            // Calculer le hash de l'image téléchargée
+            $hasher = new ImageHash(new DifferenceHash());
+            $uploadedHash = $hasher->hash($fullPath);
+            $uploadedHashString = (string)$uploadedHash; // Convertir en chaîne pour comparaison
+            
+            // Récupérer tous les hash d'images de produits
+            $productHashes = ProductImageHash::all();
+            
+            if ($productHashes->isEmpty()) {
+                // Si aucun hash n'est disponible, utiliser la méthode par couleur comme fallback
+                $colors = $this->getImageDominantColors($imagePath);
+                $searchQuery = implode(' ', $colors);
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Aucun produit hashé disponible, utilisation de la recherche par couleur',
+                    'redirect_url' => route('search', ['keyword' => $searchQuery, 'image_search' => 1])
+                ]);
+            }
+            
+            // Comparer et trouver les plus similaires en utilisant une distance de Hamming personnalisée
+            $similarities = [];
+            
+            foreach ($productHashes as $productHash) {
+                try {
+                    $storedHashString = $productHash->image_hash;
+                    
+                    // Calculer la distance de Hamming entre les deux chaînes hexadécimales
+                    $distance = $this->calculateHammingDistance($uploadedHashString, $storedHashString);
+                    
+                    // Convertir distance en score de similarité (plus petit = plus similaire)
+                    $similarity = max(0, 100 - ($distance * 2)); // Ajustez la formule selon vos besoins
+                    
+                    if ($similarity > 30) { // Seuil minimal de similarité
+                        $similarities[$productHash->product_id] = $similarity;
+                    }
+                } catch (\Exception $e) {
+                    \Log::warning('Erreur lors de la comparaison du hash pour le produit '.$productHash->product_id.': '.$e->getMessage());
+                    continue; // Passer au hash suivant en cas d'erreur
+                }
+            }
+            
+            // Trier par similarité décroissante
+            arsort($similarities);
+            
+            // Limiter à 20 produits maximum
+            $similarProductIds = array_slice(array_keys($similarities), 0, 20);
+            
+            // Si aucun produit similaire n'est trouvé, utilisez la méthode par couleur comme fallback
+            if (empty($similarProductIds)) {
+                $colors = $this->getImageDominantColors($imagePath);
+                $searchQuery = implode(' ', $colors);
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Aucun produit similaire trouvé, utilisation de la recherche par couleur',
+                    'redirect_url' => route('search', ['keyword' => $searchQuery, 'image_search' => 1])
+                ]);
+            }
+            
+            // Récupérer les produits similaires
+            $products = Product::whereIn('id', $similarProductIds)
+                ->where('published', 1)
+                ->get();
+            
+            // Stocker les produits en session pour la page de résultats
+            session(['image_search_results' => $products->pluck('id')->toArray()]);
+            session(['image_search_similarities' => $similarities]);
+            session(['search_image' => $imagePath]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Recherche par image réussie',
+                'redirect_url' => route('search.image.results')
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Image search error: ' . $e->getMessage() . ' at line: ' . $e->getLine());
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue lors de la recherche par image'
+            ], 500);
+        }
+    }
+
+    /**
+     * Calculer la distance de Hamming entre deux chaînes hexadécimales
+     *
+     * @param string $hex1
+     * @param string $hex2
+     * @return int
+     */
+    private function calculateHammingDistance($hex1, $hex2)
+    {
+        // Assurer que les deux chaînes ont la même longueur
+        $len = max(strlen($hex1), strlen($hex2));
+        $hex1 = str_pad($hex1, $len, '0', STR_PAD_RIGHT);
+        $hex2 = str_pad($hex2, $len, '0', STR_PAD_RIGHT);
+        
+        $distance = 0;
+        
+        // Comparer chaque caractère des chaînes hexadécimales
+        for ($i = 0; $i < $len; $i++) {
+            // Convertir les caractères hexadécimaux en binaire (4 bits)
+            $bin1 = str_pad(decbin(hexdec($hex1[$i])), 4, '0', STR_PAD_LEFT);
+            $bin2 = str_pad(decbin(hexdec($hex2[$i])), 4, '0', STR_PAD_LEFT);
+            
+            // Comparer chaque bit et compter les différences
+            for ($j = 0; $j < 4; $j++) {
+                if (isset($bin1[$j]) && isset($bin2[$j]) && $bin1[$j] !== $bin2[$j]) {
+                    $distance++;
+                }
+            }
+        }
+        
+        return $distance;
+    }
+
+    public function getImageSearchResults(Request $request)
+    {
+        try {
+            $productIds = session('image_search_results', []);
+            $similarities = session('image_search_similarities', []);
+            $searchImage = session('search_image');
+
+            if (empty($productIds)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Aucun résultat de recherche par image trouvé'
+                ], 404);
+            }
+
+            $products = Product::whereIn('id', $productIds)
+                ->where('published', 1)
+                ->get()
+                ->map(function ($product) use ($similarities) {
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'slug' => $product->slug,
+                        'thumbnail_image' => uploaded_asset($product->thumbnail_img),
+                        'unit_price' => $product->unit_price,
+                        'similarity' => isset($similarities[$product->id]) ? round($similarities[$product->id]) : 0,
+                    ];
+                })
+                ->sortByDesc(function ($product) use ($similarities) {
+                    return $similarities[$product['id']];
+                })
+                ->values();
+
+            return response()->json([
+                'success' => true,
+                'products' => $products,
+                'similarities' => $similarities,
+                'search_image' => $searchImage ? Storage::url($searchImage) : null,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la récupération des résultats de recherche par image: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue lors de la récupération des résultats'
+            ], 500);
+        }
+    }
+
+    // Route pour les résultats de recherche par image
+    public function imageSearchResults()
+    {
+        $productIds = session('image_search_results', []);
+        $similarities = session('image_search_similarities', []);
+        $searchImage = session('search_image');
+        
+        if (empty($productIds)) {
+            return redirect()->route('search');
+        }
+        
+        $products = Product::whereIn('id', $productIds)
+            ->where('published', 1)
+            ->get()
+            ->sort(function ($a, $b) use ($similarities) {
+                return $similarities[$b->id] <=> $similarities[$a->id];
+            });
+        
+        // Récupérer les catégories pour le filtre latéral
+        $categories = Category::with('childrenCategories')
+            ->where('level', 0)
+            ->orderBy('order_level', 'desc')
+            ->get();
+        
+        // Récupérer les attributs pour les filtres
+        $attributes = Attribute::all();
+        
+        // Récupérer les couleurs pour le filtre de couleurs
+        $colors = Color::all();
+        
+        return view('frontend.image_search_results', compact(
+            'products',
+            'similarities',
+            'searchImage',
+            'categories',  // Ajout des catégories
+            'attributes',  // Ajout des attributs
+            'colors'       // Ajout des couleurs
+        ));
+    }
+
+    /**
+     * Fonction pour extraire les couleurs dominantes d'une image
+     * Note: Cette fonction est simpliste, pour une analyse plus précise, utilisez une bibliothèque dédiée
+     * ou une API d'analyse d'image
+     */
+    private function getImageDominantColors($imagePath)
+    {
+        $colors = [];
+        $imagePath = storage_path('app/public/' . $imagePath);
+        
+        // Vérifier le format de l'image
+        $imageInfo = getimagesize($imagePath);
+        switch ($imageInfo[2]) {
+            case IMAGETYPE_JPEG:
+                $image = imagecreatefromjpeg($imagePath);
+                break;
+            case IMAGETYPE_PNG:
+                $image = imagecreatefrompng($imagePath);
+                break;
+            case IMAGETYPE_GIF:
+                $image = imagecreatefromgif($imagePath);
+                break;
+            default:
+                return ['unknown'];
+        }
+        
+        // Réduire l'image pour l'analyse (pour la performance)
+        $width = imagesx($image);
+        $height = imagesy($image);
+        $resizedImage = imagecreatetruecolor(50, 50);
+        imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, 50, 50, $width, $height);
+        
+        // Collecter les couleurs
+        $colorCounts = [];
+        for ($x = 0; $x < 50; $x++) {
+            for ($y = 0; $y < 50; $y++) {
+                $rgb = imagecolorat($resizedImage, $x, $y);
+                $r = ($rgb >> 16) & 0xFF;
+                $g = ($rgb >> 8) & 0xFF;
+                $b = $rgb & 0xFF;
+                
+                // Simplifier la couleur (réduire la précision)
+                $r = floor($r/50) * 50;
+                $g = floor($g/50) * 50;
+                $b = floor($b/50) * 50;
+                
+                $colorKey = $r . '-' . $g . '-' . $b;
+                if (!isset($colorCounts[$colorKey])) {
+                    $colorCounts[$colorKey] = 0;
+                }
+                $colorCounts[$colorKey]++;
+            }
+        }
+        
+        // Trier par fréquence
+        arsort($colorCounts);
+        
+        // Noms de couleurs simplifiés (vous pourriez utiliser une bibliothèque plus précise)
+        $colorNames = [
+            '0-0-0' => 'black',
+            '50-50-50' => 'darkgray',
+            '100-100-100' => 'gray',
+            '150-150-150' => 'lightgray',
+            '200-200-200' => 'silver',
+            '250-250-250' => 'white',
+            '250-0-0' => 'red',
+            '250-150-150' => 'pink',
+            '200-100-0' => 'brown',
+            '250-200-0' => 'yellow',
+            '150-250-150' => 'lightgreen',
+            '0-250-0' => 'green',
+            '0-250-250' => 'cyan',
+            '0-0-250' => 'blue',
+            '150-0-250' => 'purple',
+        ];
+        
+        // Obtenir les 3 couleurs les plus dominantes
+        $i = 0;
+        foreach ($colorCounts as $colorKey => $count) {
+            // Trouver la couleur nommée la plus proche
+            $closestColor = 'unknown';
+            $closestDistance = PHP_INT_MAX;
+            
+            list($r, $g, $b) = explode('-', $colorKey);
+            
+            foreach ($colorNames as $key => $name) {
+                list($kr, $kg, $kb) = explode('-', $key);
+                $distance = sqrt(pow($r - $kr, 2) + pow($g - $kg, 2) + pow($b - $kb, 2));
+                
+                if ($distance < $closestDistance) {
+                    $closestDistance = $distance;
+                    $closestColor = $name;
+                }
+            }
+            
+            $colors[] = $closestColor;
+            $i++;
+            if ($i >= 3) break;
+        }
+        
+        // Nettoyer
+        imagedestroy($image);
+        imagedestroy($resizedImage);
+        
+        // Ajouter quelques termes génériques pour améliorer la recherche
+        $colors[] = 'product';
+        
+        return array_unique($colors);
     }
 }

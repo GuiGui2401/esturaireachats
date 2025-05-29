@@ -33,7 +33,7 @@
             }
         }
     </style>
-    <script src="https://js.stripe.com/v3/" async defer></script>
+    <script src="https://js.stripe.com/v3/" defer></script>
 </head>
 <body>
 <button id="checkout-button" style="display: none;"></button>

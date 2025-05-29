@@ -114,7 +114,7 @@ class PageController extends Controller
             if($page->type == 'custom_page'){
               $page->slug           = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug));
             }
-            if($request->lang == env("DEFAULT_LANGUAGE")){
+            if($request->lang == env('DEFAULT_LANGUAGE')){
               $page->title          = $request->title;
               $page->content        = $request->content;
             }

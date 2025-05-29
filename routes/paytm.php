@@ -2,10 +2,10 @@
 
 //Paytm
 
-use App\Http\Controllers\Payment\PaytmController;
+use App\Http\Controllers\Api\V2\PaytmController;
 use App\Http\Controllers\Payment\ToyyibpayController;
-use App\Http\Controllers\Payment\MyfatoorahController;
-use App\Http\Controllers\Payment\KhaltiController;
+use App\Http\Controllers\MyfatoorahController;
+use App\Http\Controllers\Api\V2\KhaltiController;
 
 
 Route::controller(PaytmController::class)->group(function () {

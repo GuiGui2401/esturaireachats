@@ -6,15 +6,22 @@ use Illuminate\Http\Request;
 use App\Models\SellerPackage;
 use App\Models\SellerPackageTranslation;
 use App\Models\SellerPackagePayment;
-use App\Models\Seller;
-use App\Models\Order;
-use App\Utility\PayfastUtility;
+use App\Models\Shop;
+use Artisan;
 use Auth;
 use Session;
 use Carbon\Carbon;
 
 class SellerPackageController extends Controller
 {
+    public function __construct() {
+        // Staff Permission Check
+        $this->middleware(['permission:view_all_seller_packages'])->only('index');
+        $this->middleware(['permission:add_seller_package'])->only('create');
+        $this->middleware(['permission:edit_seller_package'])->only('edit');
+        $this->middleware(['permission:delete_seller_package'])->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +30,7 @@ class SellerPackageController extends Controller
     public function index()
     {
         $seller_packages = SellerPackage::all();
-        return view('seller_packages.index',compact('seller_packages'));
+        return view('seller_packages.index', compact('seller_packages'));
     }
 
     /**
@@ -50,7 +57,7 @@ class SellerPackageController extends Controller
         $seller_package->product_upload_limit = $request->product_upload_limit;
         $seller_package->duration = $request->duration;
         $seller_package->logo = $request->logo;
-        if($seller_package->save()){
+        if ($seller_package->save()) {
 
             $seller_package_translation = SellerPackageTranslation::firstOrNew(['lang' => env('DEFAULT_LANGUAGE'), 'seller_package_id' => $seller_package->id]);
             $seller_package_translation->name = $request->name;
@@ -58,8 +65,7 @@ class SellerPackageController extends Controller
 
             flash(translate('Package has been inserted successfully'))->success();
             return redirect()->route('seller_packages.index');
-        }
-        else{
+        } else {
             flash(translate('Something went wrong'))->error();
             return back();
         }
@@ -86,7 +92,7 @@ class SellerPackageController extends Controller
     {
         $lang   = $request->lang;
         $seller_package = SellerPackage::findOrFail($id);
-        return view('seller_packages.edit', compact('seller_package','lang'));
+        return view('seller_packages.edit', compact('seller_package', 'lang'));
     }
 
     /**
@@ -99,22 +105,21 @@ class SellerPackageController extends Controller
     public function update(Request $request, $id)
     {
         $seller_package = SellerPackage::findOrFail($id);
-        if($request->lang == env("DEFAULT_LANGUAGE")){
+        if ($request->lang == env("DEFAULT_LANGUAGE")) {
             $seller_package->name = $request->name;
         }
         $seller_package->amount = $request->amount;
         $seller_package->product_upload_limit = $request->product_upload_limit;
         $seller_package->duration = $request->duration;
         $seller_package->logo = $request->logo;
-        if($seller_package->save()){
+        if ($seller_package->save()) {
 
             $seller_package_translation = SellerPackageTranslation::firstOrNew(['lang' => $request->lang, 'seller_package_id' => $seller_package->id]);
             $seller_package_translation->name = $request->name;
             $seller_package_translation->save();
             flash(translate('Package has been inserted successfully'))->success();
             return redirect()->route('seller_packages.index');
-        }
-        else{
+        } else {
             flash(translate('Something went wrong'))->error();
             return back();
         }
@@ -140,10 +145,16 @@ class SellerPackageController extends Controller
 
     //FrontEnd
     //@index
+    public function packages_payment_list()
+    {
+        $seller_packages_payment = SellerPackagePayment::with('seller_package')->where('user_id', Auth::user()->id)->paginate(15);
+        return view('seller_packages.frontend.packages_payment_list', compact('seller_packages_payment'));
+    }
+
     public function seller_packages_list()
     {
         $seller_packages = SellerPackage::all();
-        return view('seller_packages.frontend.seller_packages_list',compact('seller_packages'));
+        return view('seller_packages.frontend.seller_packages_list', compact('seller_packages'));
     }
 
     public function purchase_package(Request $request)
@@ -156,85 +167,63 @@ class SellerPackageController extends Controller
 
         $seller_package = SellerPackage::findOrFail(Session::get('payment_data')['seller_package_id']);
 
-        if($seller_package->amount == 0){
+        if ($seller_package->amount == 0) {
             return $this->purchase_payment_done(Session::get('payment_data'), null);
-        }
-        elseif (Auth::user()->seller->seller_package != null && $seller_package->product_upload_limit < Auth::user()->seller->seller_package->product_upload_limit){
+        } elseif (Auth::user()->shop->seller_package != null && $seller_package->product_upload_limit < Auth::user()->shop->seller_package->product_upload_limit) {
             flash(translate('You have more uploaded products than this package limit. You need to remove excessive products to downgrade.'))->warning();
             return back();
         }
 
-        if($request->payment_option == 'paypal'){
-            $paypal = new PaypalController;
-            return $paypal->getCheckout();
-        }
-        elseif ($request->payment_option == 'stripe') {
-            $stripe = new StripePaymentController;
-            return $stripe->stripe();
-        }
-        elseif ($request->payment_option == 'sslcommerz') {
-            $sslcommerz = new PublicSslCommerzPaymentController;
-            return $sslcommerz->index($request);
-        }
-        elseif ($request->payment_option == 'instamojo') {
-            $instamojo = new InstamojoController;
-            return $instamojo->pay($request);
-        }
-        elseif ($request->payment_option == 'razorpay') {
-            $razorpay = new RazorpayController;
-            return $razorpay->payWithRazorpay($request);
-        }
-        elseif ($request->payment_option == 'paystack') {
-            $paystack = new PaystackController;
-            return $paystack->redirectToGateway($request);
-        }
-		
-		elseif ($request->payment_option == 'flutterwave') {
-            $flutterwave = new FlutterwaveController();
-            return $flutterwave->pay();
-        }
-        elseif ($request->payment_option == 'mpesa') {
-            $mpesa = new MpesaController();
-            return $mpesa->pay();
-        }
-        elseif ($request->payment_option == 'payfast') {
-            $order = Order::findOrFail($request->session()->get('order_id'));
-            $order_id = $order->id;
-            $amount = $order->grand_total;
-            return PayfastUtility::create_checkout_form($order_id, $amount);
+        $decorator = __NAMESPACE__ . '\\Payment\\' . str_replace(' ', '', ucwords(str_replace('_', ' ', $request->payment_option))) . "Controller";
+        if (class_exists($decorator)) {
+            return (new $decorator)->pay($request);
         }
     }
 
-    public function purchase_payment_done($payment_data, $payment){
-        $seller = Auth::user()->seller;
+    public function purchase_payment_done($payment_data, $payment)
+    {
+        $seller = Auth::user()->shop;
         $seller->seller_package_id = Session::get('payment_data')['seller_package_id'];
         $seller_package = SellerPackage::findOrFail(Session::get('payment_data')['seller_package_id']);
-        $seller->invalid_at = date('Y-m-d', strtotime( $seller->invalid_at. ' +'. $seller_package->duration .'days'));
+        $seller->product_upload_limit = $seller_package->product_upload_limit;
+        $seller->package_invalid_at = date('Y-m-d', strtotime($seller->package_invalid_at . ' +' . $seller_package->duration . 'days'));
         $seller->save();
 
+        $seller_package = new SellerPackagePayment;
+        $seller_package->user_id = Auth::user()->id;
+        $seller_package->seller_package_id = Session::get('payment_data')['seller_package_id'];
+        $seller_package->payment_method = Session::get('payment_data')['payment_method'];
+        $seller_package->payment_details = $payment;
+        $seller_package->approval = 1;
+        $seller_package->offline_payment = 2;
+        $seller_package->save();
+
         flash(translate('Package purchasing successful'))->success();
-        return redirect()->route('dashboard');
+        return redirect()->route('seller.dashboard');
     }
 
-    public function unpublish_products(Request $request){
-        foreach (Seller::all() as $seller) {
-            if($seller->invalid_at != null && Carbon::now()->diffInDays(Carbon::parse($seller->invalid_at), false) <= 0){
-                foreach ($seller->user->products as $product) {
+    public function unpublish_products(Request $request)
+    {
+        foreach (Shop::all() as $shop) {
+            if ($shop->package_invalid_at != null && Carbon::now()->diffInDays(Carbon::parse($shop->package_invalid_at), false) <= 0) {
+                foreach ($shop->user->products as $product) {
                     $product->published = 0;
                     $product->save();
                 }
-                $seller->seller_package_id = null;
-                $seller->save();
+                $shop->seller_package_id = null;
+                $shop->save();
             }
         }
+        Artisan::call('cache:clear');
     }
 
-    public function purchase_package_offline(Request $request){
+    public function purchase_package_offline(Request $request)
+    {
         $seller_package = SellerPackage::findOrFail($request->package_id);
 
-        if (Auth::user()->seller->seller_package != null && $seller_package->product_upload_limit < Auth::user()->seller->seller_package->product_upload_limit){
+        if (Auth::user()->shop->seller_package != null && $seller_package->product_upload_limit < Auth::user()->shop->seller_package->product_upload_limit) {
             flash(translate('You have more uploaded products than this package limit. You need to remove excessive products to downgrade.'))->warning();
-            return redirect()->route('seller_packages_list');
+            return redirect()->route('seller.seller_packages_list');
         }
         $seller_package = new SellerPackagePayment;
         $seller_package->user_id = Auth::user()->id;

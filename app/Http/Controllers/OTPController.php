@@ -20,7 +20,8 @@ class OTPController extends Controller
      */
     public function configure_index()
     {
-        return view('otp_systems.configurations.activation');
+        $otp_configurations = OtpConfiguration::all();
+        return view('backend.otp_systems.configurations.activation', compact('otp_configurations'));
     }
 
     /**
@@ -30,7 +31,8 @@ class OTPController extends Controller
      */
     public function credentials_index()
     {
-        return view('otp_systems.configurations.index');
+        $otp_configurations = OtpConfiguration::all();
+        return view('backend.otp_systems.configurations.index', compact('otp_configurations'));
     }
 
     /**

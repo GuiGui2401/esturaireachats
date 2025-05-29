@@ -8,6 +8,11 @@ use App\Models\SellerPackage;
 
 class SellerPackagePaymentController extends Controller
 {
+    public function __construct() {
+        // Staff Permission Check
+        $this->middleware(['permission:view_all_offline_seller_package_payments'])->only('offline_payment_request');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,9 +34,10 @@ class SellerPackagePaymentController extends Controller
         $package_details    = SellerPackage::findOrFail($package_payment->seller_package_id);
         $package_payment->approval      = $request->status;
         if($package_payment->save()){
-            $seller                                 = $package_payment->user->seller;
+            $seller                                 = $package_payment->user->shop;
             $seller->seller_package_id              = $package_payment->seller_package_id;
-            $seller->invalid_at                     = date('Y-m-d', strtotime( $seller->invalid_at. ' +'. $package_details->duration .'days'));
+            $seller->product_upload_limit           = $package_details->product_upload_limit;
+            $seller->package_invalid_at             = date('Y-m-d', strtotime( $seller->package_invalid_at. ' +'. $package_details->duration .'days'));
             if($seller->save()){
                 return 1;
             }

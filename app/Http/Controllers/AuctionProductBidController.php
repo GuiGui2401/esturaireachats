@@ -13,12 +13,6 @@ use App\Mail\AuctionBidMailManager;
 
 class AuctionProductBidController extends Controller
 {
-    public function __construct() {
-        // Staff Permission Check
-        $this->middleware(['permission:view_auction_product_bids'])->only('product_bids_admin');
-        $this->middleware(['permission:delete_auction_product_bids'])->only('bid_destroy_admin');
-    }
-
     /**
      * Display a listing of the resource.
      *

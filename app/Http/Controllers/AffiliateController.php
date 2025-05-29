@@ -365,29 +365,29 @@ class AffiliateController extends Controller
                     }
                 }
             }
-            if(AffiliateOption::where('type', 'product_sharing')->first()->status){
+            if(AffiliateOption::where('type', 'product_sharing')->first()->status) {
                 foreach ($order->orderDetails as $key => $orderDetail) {
                     $amount = 0;
-                    if($orderDetail->product_referral_code != null){
+                    if($orderDetail->product_referral_code != null) {
                         $referred_by_user = User::where('referral_code', $orderDetail->product_referral_code)->first();
                         if($referred_by_user != null) {
-                            if(AffiliateOption::where('type', 'product_sharing')->first()->details != null && json_decode(AffiliateOption::where('type', 'product_sharing')->first()->details)->commission_type == 'amount'){
+                            if(AffiliateOption::where('type', 'product_sharing')->first()->details != null && json_decode(AffiliateOption::where('type', 'product_sharing')->first()->details)->commission_type == 'amount') {
                                 $amount = json_decode(AffiliateOption::where('type', 'product_sharing')->first()->details)->commission;
                             }
                             elseif(AffiliateOption::where('type', 'product_sharing')->first()->details != null && json_decode(AffiliateOption::where('type', 'product_sharing')->first()->details)->commission_type == 'percent') {
                                 $amount = (json_decode(AffiliateOption::where('type', 'product_sharing')->first()->details)->commission * $orderDetail->price)/100;
                             }
                             $affiliate_user = $referred_by_user->affiliate_user;
-                            if($affiliate_user != null){
+                            if($affiliate_user != null) {
                                 $affiliate_user->balance += $amount;
                                 $affiliate_user->save();
 
                                 // Affiliate log
                                 $affiliate_log                      = new AffiliateLog;
-                                if($order->user_id != null){
+                                if($order->user_id != null) {
                                     $affiliate_log->user_id         = $order->user_id;
                                 }
-                                else{
+                                else {
                                     $affiliate_log->guest_id        = $order->guest_id;
                                 }
                                 $affiliate_log->referred_by_user    = $referred_by_user->id;

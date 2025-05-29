@@ -1,4 +1,4 @@
-<script src="//pay.voguepay.com/js/voguepay.js" async defer></script>
+<script src="//pay.voguepay.com/js/voguepay.js" defer></script>
 
 <script>
     closedFunction=function() {

@@ -2,7 +2,7 @@
 
 @section('panel_content')
     <div class="card">
-        <form class="was-validated " id=" sort_orders" action="" method="GET">
+        <form class="" id=" sort_orders" action="" method="GET">
             <div class="card-header row gutters-5">
                 <div class="col text-center text-md-left">
                     <h5 class="mb-md-0 h6">{{ translate('Inhouse Orders') }}</h5>
@@ -11,11 +11,9 @@
                     <select class="form-control aiz-selectpicker" name="payment_type" id="payment_type"
                         onchange="sort_orders()">
                         <option value="">{{ translate('Filter by Payment Status') }}</option>
-                        <option value="paid"
-                            @isset($payment_status) @if ($payment_status == 'paid') selected @endif @endisset>
+                        <option value="paid" @isset($payment_status) @if ($payment_status == 'paid') selected @endif @endisset>
                             {{ translate('Paid') }}</option>
-                        <option value="unpaid"
-                            @isset($payment_status) @if ($payment_status == 'unpaid') selected @endif @endisset>
+                        <option value="unpaid" @isset($payment_status) @if ($payment_status == 'unpaid') selected @endif @endisset>
                             {{ translate('Un-Paid') }}</option>
                     </select>
                 </div>
@@ -24,24 +22,19 @@
                     <select class="form-control aiz-selectpicker" name="delivery_status" id="delivery_status"
                         onchange="sort_orders()">
                         <option value="">{{ translate('Filter by Deliver Status') }}</option>
-                        <option value="pending"
-                            @isset($delivery_status) @if ($delivery_status == 'pending') selected @endif @endisset>
+                        <option value="pending" @isset($delivery_status) @if ($delivery_status == 'pending') selected @endif @endisset>
                             {{ translate('Pending') }}</option>
-                        <option value="confirmed"
-                            @isset($delivery_status) @if ($delivery_status == 'confirmed') selected @endif @endisset>
+                        <option value="confirmed" @isset($delivery_status) @if ($delivery_status == 'confirmed') selected @endif @endisset>
                             {{ translate('Confirmed') }}</option>
-                        <option value="on_delivery"
-                            @isset($delivery_status) @if ($delivery_status == 'on_delivery') selected @endif @endisset>
+                        <option value="on_delivery" @isset($delivery_status) @if ($delivery_status == 'on_delivery') selected @endif @endisset>
                             {{ translate('On delivery') }}</option>
-                        <option value="delivered"
-                            @isset($delivery_status) @if ($delivery_status == 'delivered') selected @endif @endisset>
+                        <option value="delivered" @isset($delivery_status) @if ($delivery_status == 'delivered') selected @endif @endisset>
                             {{ translate('Delivered') }}</option>
                     </select>
                 </div>
                 <div class="col-lg-3">
                     <div class="form-group mb-0">
-                        <input type="text" class="form-control" id="search" name="search"
-                            @isset($sort_search)
+                        <input type="text" class="form-control" id="search" name="search" @isset($sort_search)
                             value="{{ $sort_search }}" @endisset
                             placeholder="{{ translate('Type Order code & hit Enter') }}">
                     </div>
@@ -82,9 +75,7 @@
                                     {{ $key + 1 + ($orders->currentPage() - 1) * $orders->perPage() }}
                                 </td>
                                 <td>
-                                    {{ $order->code }}@if ($order->viewed == 0)
-                                        <span class="badge badge-inline badge-info">{{ translate('New') }}</span>
-                                    @endif
+                                    {{ $order->code }}@if ($order->viewed == 0) <span class="badge badge-inline badge-info">{{ translate('New') }}</span>@endif
                                 </td>
                                 <td>
                                     @if ($order->user != null)
@@ -123,8 +114,8 @@
                                 @endif
 
                                 <td class="text-right">
-                                    <a href="{{ route('seller.orders.show', encrypt($order->id)) }}"
-                                        class="btn btn-soft-info btn-icon btn-circle btn-sm"
+                                    <a href="javascript:void(0)" class="btn btn-soft-info btn-icon btn-circle btn-sm"
+                                        onclick="show_order_details({{ $order->id }})"
                                         title="{{ translate('Order Details') }}">
                                         <i class="las la-eye"></i>
                                     </a>
@@ -160,6 +151,7 @@
             </div>
         </div>
     </div>
+
 @endsection
 
 @section('script')

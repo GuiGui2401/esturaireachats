@@ -1,6 +1,6 @@
-@extends('frontend.layouts.app')
+@extends('seller.layouts.app')
 
-@section('content')
+@section('panel_content')
     <section class="py-8 bg-soft-primary">
         <div class="container">
             <div class="row">
@@ -31,10 +31,10 @@
                                 </ul>
                                 <div class="mb-5 d-flex align-items-center justify-content-center">
                                     @if ($seller_package->amount == 0)
-                                        <span class="display-4 fw-600 lh-1 mb-0">{{ translate('Free') }}</span>
+                                        <span class="fs-30 fw-600 lh-1 mb-0">{{ translate('Free') }}</span>
                                     @else
                                         <span
-                                            class="display-4 fw-600 lh-1 mb-0">{{ single_price($seller_package->amount) }}</span>
+                                            class="fs-30 fw-600 lh-1 mb-0">{{ single_price($seller_package->amount) }}</span>
                                     @endif
                                     <span
                                         class="text-secondary border-left ml-2 pl-2">{{ $seller_package->duration }}<br>{{ translate('Days') }}</span>
@@ -108,11 +108,11 @@
                     <h5 class="modal-title" id="exampleModalLabel">{{ translate('Purchase Your Package') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form class="was-validated " id="package_payment_form" action="{{ route('seller_packages.purchase') }}"
+                <form class="" id="package_payment_form" action="{{ route('seller_packages.purchase') }}"
                     method="post">
                     @csrf
                     <input type="hidden" name="seller_package_id" value="">
-                    <div class="modal-body">
+                    <div class="modal-body" style="overflow-y: unset;">
                         <div class="row">
                             <div class="col-md-2">
                                 <label>{{ translate('Payment Method') }}</label>
@@ -121,37 +121,67 @@
                                 <div class="mb-3">
                                     <select class="form-control aiz-selectpicker" data-live-search="true"
                                         name="payment_option">
-                                        @if (\App\Models\BusinessSetting::where('type', 'paypal_payment')->first()->value == 1)
+                                        @if (get_setting('paypal_payment') == 1)
                                             <option value="paypal">{{ translate('Paypal') }}</option>
                                         @endif
-                                        @if (\App\Models\BusinessSetting::where('type', 'stripe_payment')->first()->value == 1)
+                                        @if (get_setting('stripe_payment') == 1)
                                             <option value="stripe">{{ translate('Stripe') }}</option>
                                         @endif
-                                        @if (\App\Models\BusinessSetting::where('type', 'sslcommerz_payment')->first()->value == 1)
+                                        @if (get_setting('mercadopago_payment') == 1)
+                                            <option value="mercadopago">{{ translate('Mercadopago') }}</option>
+                                            <option value="paypal">{{ translate('Paypal') }}</option>
+                                        @endif
+                                        @if (get_setting('toyyibpay_payment') == 1)
+                                            <option value="toyyibpay">{{ translate('ToyyibPay') }}</option>
+                                        @endif
+                                        @if (get_setting('sslcommerz_payment') == 1)
                                             <option value="sslcommerz">{{ translate('sslcommerz') }}</option>
                                         @endif
-                                        @if (\App\Models\BusinessSetting::where('type', 'instamojo_payment')->first()->value == 1)
+                                        @if (get_setting('instamojo_payment') == 1)
                                             <option value="instamojo">{{ translate('Instamojo') }}</option>
                                         @endif
-                                        @if (\App\Models\BusinessSetting::where('type', 'razorpay')->first()->value == 1)
+                                        @if (get_setting('razorpay') == 1)
                                             <option value="razorpay">{{ translate('RazorPay') }}</option>
                                         @endif
-                                        @if (\App\Models\BusinessSetting::where('type', 'paystack')->first()->value == 1)
+                                        @if (get_setting('paystack') == 1)
                                             <option value="paystack">{{ translate('PayStack') }}</option>
                                         @endif
-                                        @if (\App\Models\BusinessSetting::where('type', 'voguepay')->first()->value == 1)
-                                            <option value="voguepay">{{ translate('Voguepay') }}</option>
+                                        @if (get_setting('payhere') == 1)
+                                            <option value="payhere">{{ translate('Payhere') }}</option>
+                                        @endif
+                                        @if (get_setting('ngenius') == 1)
+                                            <option value="ngenius">{{ translate('Ngenius') }}</option>
+                                        @endif
+                                        @if (get_setting('iyzico') == 1)
+                                            <option value="iyzico">{{ translate('Iyzico') }}</option>
+                                        @endif
+                                        @if (get_setting('nagad') == 1)
+                                            <option value="nagad">{{ translate('Nagad') }}</option>
+                                        @endif
+                                        @if (get_setting('bkash') == 1)
+                                            <option value="bkash">{{ translate('Bkash') }}</option>
+                                        @endif
+                                        @if (get_setting('aamarpay') == 1)
+                                            <option value="aamarpay">{{ translate('Amarpay') }}</option>
                                         @endif
                                         @if (addon_is_activated('african_pg'))
                                             @if (get_setting('mpesa') == 1)
-                                                <option value="mpesa">{{ translate('mpesa') }}</option>
+                                                <option value="mpesa">{{ translate('Mpesa') }}</option>
                                             @endif
                                             @if (get_setting('flutterwave') == 1)
-                                                <option value="flutterwave">{{ translate('flutterwave') }}</option>
+                                                <option value="flutterwave">{{ translate('Flutterwave') }}</option>
                                             @endif
                                             @if (get_setting('payfast') == 1)
-                                                <option value="payfast">{{ translate('payfast') }}</option>
+                                                <option value="payfast">{{ translate('PayFast') }}</option>
                                             @endif
+                                        @endif
+                                        @if (addon_is_activated('paytm'))
+                                            @if (get_setting('myfatoorah') == 1)
+                                                <option value="myfatoorah">{{ translate('MyFatoorah') }}</option>
+                                            @endif
+                                            @if (get_setting('khalti_payment') == 1)
+                                                <option value="khalti">{{ translate('Khalti') }}</option>
+                                            @endif                                            
                                         @endif
                                     </select>
                                 </div>
@@ -201,7 +231,7 @@
                 show_price_modal(package_id);
             } else if (type == 'offline') {
                 $("#select_type_cancel").click();
-                $.post('{{ route('offline_seller_package_purchase_modal') }}', {
+                $.post('{{ route('seller.offline_seller_package_purchase_modal') }}', {
                     _token: '{{ csrf_token() }}',
                     package_id: package_id
                 }, function(data) {

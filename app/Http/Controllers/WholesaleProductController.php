@@ -6,8 +6,13 @@ use Illuminate\Http\Request;
 use CoreComponentRepository;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductTranslation;
 use App\Services\WholesaleService;
+use App\Services\ProductTaxService;
+use App\Services\ProductFlashDealService;
 use Auth;
+use App\Http\Requests\WholesaleProductRequest;
+use Artisan;
 
 class WholesaleProductController extends Controller
 {
@@ -186,22 +191,73 @@ class WholesaleProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function product_store_admin(Request $request)
+    public function product_store_admin(WholesaleProductRequest $request)
     { 
-        (new WholesaleService)->store($request);
+        $product = (new WholesaleService)->store($request->except([
+            '_token', 'button', 'flat_shipping_cost', 'tax_id', 'tax', 'tax_type', 'flash_deal_id', 'flash_discount', 'flash_discount_type'
+        ]));
+        $request->merge(['product_id' => $product->id]);
+
+        //VAT & Tax
+        if ($request->tax_id) {
+            (new productTaxService)->store($request->only([
+                'tax_id', 'tax', 'tax_type', 'product_id'
+            ]));
+        }
+
+        //Flash Deal
+        (new productFlashDealService)->store($request->only([
+            'flash_deal_id', 'flash_discount', 'flash_discount_type'
+        ]), $product);
+
+        // Product Translations
+        $request->merge(['lang' => env('DEFAULT_LANGUAGE')]);
+        ProductTranslation::create($request->only([
+            'lang', 'name', 'unit', 'description', 'product_id'
+        ]));
+
+        flash(translate('Product has been inserted successfully'))->success();
+
+        Artisan::call('view:clear');
+        Artisan::call('cache:clear');
+
         return redirect()->route('wholesale_products.in_house');
     }
 
-    public function product_store_seller(Request $request)
+    public function product_store_seller(WholesaleProductRequest $request)
     {
-        if(addon_is_activated('seller_subscription')){
-            if(Auth::user()->shop->seller_package == null || Auth::user()->shop->seller_package->product_upload_limit <= Auth::user()->products()->count()){
+        if (addon_is_activated('seller_subscription')) {
+            if (
+                (Auth::user()->shop->seller_package == null) ||
+                (Auth::user()->shop->seller_package->product_upload_limit <= Auth::user()->products()->count())
+            ) {
                 flash(translate('Upload limit has been reached. Please upgrade your package.'))->warning();
                 return back();
             }
-        }  
+        }
+       
+        $product = (new WholesaleService)->store($request->except([
+            '_token', 'tax_id', 'tax', 'tax_type', 'flash_deal_id', 'flash_discount', 'flash_discount_type'
+        ]));
+        $request->merge(['product_id' => $product->id]);
+        //VAT & Tax
+        if ($request->tax_id) {
+            (new productTaxService)->store($request->only([
+                'tax_id', 'tax', 'tax_type', 'product_id'
+            ]));
+        }
 
-        (new WholesaleService)->store($request);
+        // Product Translations
+        $request->merge(['lang' => env('DEFAULT_LANGUAGE')]);
+        ProductTranslation::create($request->only([
+            'lang', 'name', 'unit', 'description', 'product_id'
+        ]));
+
+        flash(translate('Product has been inserted successfully'))->success();
+
+        Artisan::call('view:clear');
+        Artisan::call('cache:clear');
+        
         return redirect()->route('seller.wholesale_products_list');
     }
 
@@ -243,15 +299,23 @@ class WholesaleProductController extends Controller
     }
 
    
-    public function product_update_admin(Request $request, $id)
+    public function product_update_admin(WholesaleProductRequest $request, $id)
     {
         (new WholesaleService)->update($request, $id);
+        flash(translate('Product has been updated successfully'))->success();
+
+        Artisan::call('view:clear');
+        Artisan::call('cache:clear');
         return back();
     }
 
-    public function product_update_seller(Request $request, $id)
+    public function product_update_seller(WholesaleProductRequest $request, $id)
     {
         (new WholesaleService)->update($request, $id);
+        flash(translate('Product has been updated successfully'))->success();
+
+        Artisan::call('view:clear');
+        Artisan::call('cache:clear');
         return back();
     }
 
@@ -264,12 +328,20 @@ class WholesaleProductController extends Controller
     public function product_destroy_admin($id)
     {
         (new WholesaleService)->destroy($id);
+        flash(translate('Product has been deleted successfully'))->success();
+            
+        Artisan::call('view:clear');
+        Artisan::call('cache:clear');
         return back();
     }
 
     public function product_destroy_seller($id)
     {
         (new WholesaleService)->destroy($id);
+        flash(translate('Product has been deleted successfully'))->success();
+            
+        Artisan::call('view:clear');
+        Artisan::call('cache:clear');
         return back();
     }
 }

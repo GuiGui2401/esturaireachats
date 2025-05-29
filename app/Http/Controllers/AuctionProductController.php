@@ -2,33 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
 
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Order;
-use App\Models\OrderDetail;
 use App\Models\User;
 use App\Services\AuctionService;
-use App\Models\ProductQuery;
-use Artisan;
 use Auth;
 use Carbon\Carbon;
 use DB;
 
 class AuctionProductController extends Controller
 {
-    public function __construct() {
-        // Staff Permission Check
-        $this->middleware(['permission:view_all_auction_products'])->only('all_auction_product_list');
-        $this->middleware(['permission:view_inhouse_auction_products'])->only('inhouse_auction_products');
-        $this->middleware(['permission:view_seller_auction_products'])->only('seller_auction_products');
-        $this->middleware(['permission:add_auction_product'])->only('product_create_admin');
-        $this->middleware(['permission:edit_auction_product'])->only('product_edit_admin');
-        $this->middleware(['permission:delete_auction_product'])->only('product_destroy_admin');
-        $this->middleware(['permission:view_auction_product_orders'])->only('admin_auction_product_orders');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -154,17 +140,13 @@ class AuctionProductController extends Controller
         }
     }
 
-    public function product_store_admin(ProductRequest $request)
+    public function product_store_admin(Request $request)
     {
         (new AuctionService)->store($request);
-        flash(translate('Product has been inserted successfully'))->success();
-
-        Artisan::call('view:clear');
-        Artisan::call('cache:clear');
         return redirect()->route('auction.inhouse_products');
     }
 
-    public function product_store_seller(ProductRequest $request)
+    public function product_store_seller(Request $request)
     {
         if (addon_is_activated('seller_subscription')) {
             if (
@@ -177,10 +159,6 @@ class AuctionProductController extends Controller
         }
 
         (new AuctionService)->store($request);
-        flash(translate('Product has been inserted successfully'))->success();
-
-        Artisan::call('view:clear');
-        Artisan::call('cache:clear');
         return redirect()->route('auction_products.seller.index');
     }
 
@@ -193,20 +171,12 @@ class AuctionProductController extends Controller
     public function product_destroy_admin($id)
     {
         (new AuctionService)->destroy($id);
-        flash(translate('Product has been deleted successfully'))->success();
-            
-        Artisan::call('view:clear');
-        Artisan::call('cache:clear');
         return redirect()->route('auction.inhouse_products');
     }
 
     public function product_destroy_seller($id)
     {
         (new AuctionService)->destroy($id);
-        flash(translate('Product has been deleted successfully'))->success();
-            
-        Artisan::call('view:clear');
-        Artisan::call('cache:clear');
         return redirect()->route('auction_products.seller.index');
     }
 
@@ -249,23 +219,27 @@ class AuctionProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function product_update_admin(ProductRequest $request, $id)
+    public function product_update_admin(Request $request, $id)
     {
         (new AuctionService)->update($request, $id);
-        flash(translate('Product has been Updated successfully'))->success();
-
-        Artisan::call('view:clear');
-        Artisan::call('cache:clear');
         return back();
     }
 
-    public function product_update_seller(ProductRequest $request, $id)
+    public function product_update_seller(Request $request, $id)
     {
         (new AuctionService)->update($request, $id);
-        flash(translate('Product has been Updated successfully'))->success();
+        return back();
+    }
 
-        Artisan::call('view:clear');
-        Artisan::call('cache:clear');
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        (new AuctionService)->destroy($id);
         return back();
     }
 
@@ -294,7 +268,11 @@ class AuctionProductController extends Controller
 
     public function all_auction_products()
     {
-        $products = get_auction_products(null, 15);
+        $products = Product::latest()->where('published', 1)->where('auction_product', 1);
+        if (get_setting('seller_auction_product') == 0) {
+            $products = $products->where('added_by', 'admin');
+        }
+        $products = $products->where('auction_start_date', '<=', strtotime("now"))->where('auction_end_date', '>=', strtotime("now"))->paginate(12);
         return view('auction.frontend.all_auction_products', compact('products'));
     }
 
@@ -302,22 +280,8 @@ class AuctionProductController extends Controller
     {
         $detailedProduct  = Product::where('slug', $slug)->first();
         if ($detailedProduct != null) {
-            $product_queries = ProductQuery::where('product_id', $detailedProduct->id)->where('customer_id', '!=', Auth::id())->latest('id')->paginate(3);
-            $total_query = ProductQuery::where('product_id', $detailedProduct->id)->count();
-            $reviews = $detailedProduct->reviews()->paginate(3);
-
-            // review status
-            $review_status = 0;
-            if (Auth::check()) {
-                $OrderDetail = OrderDetail::with(['order' => function ($q) {
-                    $q->where('user_id', Auth::id());
-                }])->where('product_id', $detailedProduct->id)->where('delivery_status', 'delivered')->first();
-                $review_status = $OrderDetail ? 1 : 0;
-            }
-
-            return view('frontend.product_details', compact('detailedProduct', 'product_queries', 'total_query', 'reviews', 'review_status'));
+            return view('auction.frontend.auction_product_details', compact('detailedProduct'));
         }
-        
         abort(404);
     }
 
@@ -329,7 +293,7 @@ class AuctionProductController extends Controller
             ->join('products', 'order_details.product_id', '=', 'products.id')
             ->where('orders.user_id', Auth::user()->id)
             ->where('products.auction_product', '1')
-            ->select('order_details.order_id as id')
+            ->select('order_details.id')
             ->paginate(15);
         return view('auction.frontend.purchase_history', compact('orders'));
     }

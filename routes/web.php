@@ -77,22 +77,6 @@ Route::controller(DemoController::class)->group(function () {
     Route::get('/migrate_attribute_values', 'migrate_attribute_values');
 });
 
-Route::get('/debug-routes', function () {
-    $routes = Route::getRoutes(); // Récupère la collection de routes
-    $routeList = [];
-    foreach ($routes as $route) {
-        $routeList[] = [
-            'uri' => $route->uri(),
-            'methods' => implode(', ', $route->methods()),
-            'action' => $route->getActionName(),
-            'name' => $route->getName(),
-            'middleware' => implode(', ', $route->gatherMiddleware()),
-        ];
-    }
-    return response()->json($routeList); // Affiche les routes en JSON
-    // Ou utilisez dd($routeList); pour un affichage de débogage
-});
-
 Route::get('/refresh-csrf', function () {
     return csrf_token();
 });
@@ -211,6 +195,8 @@ Route::controller(SearchController::class)->group(function () {
     Route::post('/ajax-search', 'ajax_search')->name('search.ajax');
     Route::get('/category/{category_slug}', 'listingByCategory')->name('products.category');
     Route::get('/brand/{brand_slug}', 'listingByBrand')->name('products.brand');
+    Route::post('/search-by-image', 'searchByImage')->name('search.by.image');
+    Route::get('/image-search-results', 'imageSearchResults')->name('search.image.results');
 });
 
 // Cart

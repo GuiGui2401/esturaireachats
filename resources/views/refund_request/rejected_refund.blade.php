@@ -41,7 +41,7 @@
                               <a href="{{ route('product', $refund->orderDetail->product->slug) }}" target="_blank" class="media-block">
                                 <div class="form-group row">
                                   <div class="col-md-5">
-                                    <img loading="lazy" src="{{ uploaded_asset($refund->orderDetail->product->thumbnail_img)}}" alt="Image" class="w-50px">
+                                    <img src="{{ uploaded_asset($refund->orderDetail->product->thumbnail_img)}}" alt="Image" class="w-50px">
                                   </div>
                                   <div class="col-md-7">
                                     <div class="media-body">{{ $refund->orderDetail->product->getTranslation('name') }}</div>
@@ -68,7 +68,7 @@
                             @endif
                         </td>
                         <td class="text-right">
-                            <a href="javascript:void(0);" onclick="refund_reject_reason_show('{{ route('reject_reason_show', $refund->id )}}')" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('Reject Reason') }}">
+                            <a href="javascript:void(0);" onclick="refund_reject_reason_show('{{ route('admin.reject_reason_show', $refund->id )}}')" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('Reject Reason') }}">
                                 <i class="las la-eye"></i>
                             </a>
                         </td>

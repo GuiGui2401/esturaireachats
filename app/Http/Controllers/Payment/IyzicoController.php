@@ -195,7 +195,7 @@ class IyzicoController extends Controller
     {
         $data['url'] = $_SERVER['SERVER_NAME'];
         $request_data_json = json_encode($data);
-        $gate = "https://activation.activeitzone.com/check_activation";
+        //$gate = "https://activation.activeitzone.com/check_activation";
 
         $header = array(
             'Content-Type:application/json'
@@ -203,7 +203,7 @@ class IyzicoController extends Controller
 
         $stream = curl_init();
 
-        curl_setopt($stream, CURLOPT_URL, $gate);
+        //curl_setopt($stream, CURLOPT_URL, $gate);
         curl_setopt($stream, CURLOPT_HTTPHEADER, $header);
         curl_setopt($stream, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($stream, CURLOPT_RETURNTRANSFER, true);

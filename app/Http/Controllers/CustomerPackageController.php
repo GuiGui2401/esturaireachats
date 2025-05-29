@@ -99,7 +99,7 @@ class CustomerPackageController extends Controller
     public function update(Request $request, $id)
     {
         $customer_package = CustomerPackage::findOrFail($id);
-        if ($request->lang == env("DEFAULT_LANGUAGE")) {
+        if ($request->lang == env('DEFAULT_LANGUAGE')) {
             $customer_package->name = $request->name;
         }
         $customer_package->amount = $request->amount;

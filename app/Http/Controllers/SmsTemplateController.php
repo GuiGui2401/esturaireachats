@@ -21,7 +21,7 @@ class SmsTemplateController extends Controller
     public function index()
     {
         $sms_templates = SmsTemplate::all();
-        return view('otp_systems.configurations.sms_templates', compact('sms_templates'));
+        return view('backend.otp_systems.configurations.sms_templates', compact('sms_templates'));
     }
 
     /**

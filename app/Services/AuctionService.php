@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\ProductStock;
+use App\Models\ProductTax;
 use App\Models\ProductTranslation;
 use Artisan;
 use Auth;
@@ -31,7 +32,6 @@ class AuctionService
         $product->auction_product = 1;
         $product->category_id     = $request->category_id;
         $product->brand_id        = $request->brand_id;
-        $product->weight          = $request->weight;
         $product->barcode         = $request->barcode;
         $product->starting_bid    = $request->starting_bid;
 
@@ -45,6 +45,9 @@ class AuctionService
         }
         $product->photos = $request->photos;
         $product->thumbnail_img = $request->thumbnail_img;
+        // $product->min_qty = 1;
+        // $product->stock_visibility_state = '';
+
 
         $tags = array();
         if($request->tags[0] != null){
@@ -83,6 +86,9 @@ class AuctionService
             elseif ($request->shipping_type == 'product_wise') {
                 $product->shipping_cost = json_encode($request->shipping_cost);
             }
+        }
+        if ($request->has('is_quantity_multiplied')) {
+            $product->is_quantity_multiplied = 1;
         }
 
         $product->meta_title = $request->meta_title;
@@ -129,19 +135,20 @@ class AuctionService
         }
 
         $product->save();
-        $request->merge(['product_id' => $product->id]);
 
-        //Product categories
-        $product->categories()->attach($request->category_ids);
-
-        // VAT & Tax
-        if ($request->tax_id) {
-            (new ProductTaxService)->store($request->only([
-                'tax_id', 'tax', 'tax_type', 'product_id'
-            ]));
+        //VAT & Tax
+        if($request->tax_id) {
+            foreach ($request->tax_id as $key => $val) {
+                $product_tax = new ProductTax;
+                $product_tax->tax_id = $val;
+                $product_tax->product_id = $product->id;
+                $product_tax->tax = $request->tax[$key];
+                $product_tax->tax_type = $request->tax_type[$key];
+                $product_tax->save();
+            }
         }
 
-        //Product Stock
+        //Generates the combinations of customer choice options
         $product_stock              = new ProductStock;
         $product_stock->product_id  = $product->id;
         $product_stock->variant     = '';
@@ -150,12 +157,16 @@ class AuctionService
         $product_stock->qty         = 1;
         $product_stock->save();
 
-        // Product Translations
+        //combinations end
 
-        $request->merge(['lang' => env('DEFAULT_LANGUAGE')]);
-        ProductTranslation::create($request->only([
-            'product_id','lang', 'name', 'unit', 'description'
-        ]));
+	       $product->save();
+
+        // Product Translations
+        $product_translation = ProductTranslation::firstOrNew(['lang' => env('DEFAULT_LANGUAGE'), 'product_id' => $product->id]);
+        $product_translation->name = $request->name;
+        $product_translation->unit = $request->unit;
+        $product_translation->description = $request->description;
+        $product_translation->save();
 
         flash(translate('Product has been inserted successfully'))->success();
 
@@ -167,9 +178,10 @@ class AuctionService
         $product                    = Product::findOrFail($id);
         $product->category_id       = $request->category_id;
         $product->brand_id          = $request->brand_id;
-        $product->weight            = $request->weight;
         $product->barcode           = $request->barcode;
         $product->cash_on_delivery = 0;
+        $product->is_quantity_multiplied = 0;
+
 
         if (addon_is_activated('refund_request')) {
             if ($request->refundable != null) {
@@ -229,6 +241,9 @@ class AuctionService
             }
         }
 
+        if ($request->has('is_quantity_multiplied')) {
+            $product->is_quantity_multiplied = 1;
+        }
         if ($request->has('cash_on_delivery')) {
             $product->cash_on_delivery = 1;
         }
@@ -255,24 +270,26 @@ class AuctionService
         $product->choice_options = json_encode(array(), JSON_UNESCAPED_UNICODE);
 
         $product->save();
-        $request->merge(['product_id' => $product->id]);
 
-        //Product categories
-        $product->categories()->sync($request->category_ids);
-
-        // VAT & Tax
-        if ($request->tax_id) {
-            $product->taxes()->delete();
-            (new ProductTaxService)->store($request->only([
-                'tax_id', 'tax', 'tax_type', 'product_id'
-            ]));
+        //VAT & Tax
+        if($request->tax_id) {
+            ProductTax::where('product_id', $product->id)->delete();
+            foreach ($request->tax_id as $key => $val) {
+                $product_tax = new ProductTax;
+                $product_tax->tax_id = $val;
+                $product_tax->product_id = $product->id;
+                $product_tax->tax = $request->tax[$key];
+                $product_tax->tax_type = $request->tax_type[$key];
+                $product_tax->save();
+            }
         }
 
         // Product Translations
-        ProductTranslation::updateOrCreate(
-            $request->only(['lang', 'product_id']),
-            $request->only(['name', 'unit', 'description'])
-        );
+        $product_translation                = ProductTranslation::firstOrNew(['lang' => $request->lang, 'product_id' => $product->id]);
+        $product_translation->name          = $request->name;
+        $product_translation->unit          = $request->unit;
+        $product_translation->description   = $request->description;
+        $product_translation->save();
 
         flash(translate('Product has been updated successfully'))->success();
 
@@ -282,12 +299,13 @@ class AuctionService
 
     public function destroy($id){
         $product = Product::findOrFail($id);
+        foreach ($product->product_translations as $key => $product_translations) {
+            $product_translations->delete();
+        }
 
-        $product->product_translations()->delete();
-        $product->categories()->detach();
-        $product->stocks()->delete();
-        $product->taxes()->delete();
-        $product->bids()->delete();
+        foreach ($product->bids as $key => $bid) {
+            $bid->delete();
+        }
 
         if(Product::destroy($id)){
             Cart::where('product_id', $id)->delete();
